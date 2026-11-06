@@ -1,42 +1,47 @@
-name: Baixar ferramentas de cortes (somente codigo)
+name: Baixar repositorios auditaveis
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     paths:
-      - '.github/workflows/download-tools.yml'
+      - agent/upstreams.lock.json
+      - tools/download_upstreams.py
+      - .github/workflows/download-tools.yml
+  push:
+    branches: [main]
+    paths:
+      - agent/upstreams.lock.json
+      - tools/download_upstreams.py
+      - .github/workflows/download-tools.yml
 permissions:
   contents: read
 jobs:
-  download:
+  inventory:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: matrix
+        run: echo "value=$(python tools/download_upstreams.py --list)" >> "$GITHUB_OUTPUT"
+  download:
+    needs: inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - name: OpenShorts
-            repository: ws-tyd/openshorts
-          - name: AI-Youtube-Shorts-Generator
-            repository: Anil-matcha/AI-Youtube-Shorts-Generator
-          - name: NovaClip
-            repository: samolubukun/NovaClip
-          - name: Chopify
-            repository: mehbul/chopify
+      matrix: ${{ fromJSON(needs.inventory.outputs.matrix) }}
     steps:
-      - name: Baixar codigo fonte sem executar
+      - uses: actions/checkout@v4
+      - name: Baixar revisao fixa sem instalar ou executar
         env:
-          REPOSITORY: ${{ matrix.repository }}
-          NAME: ${{ matrix.name }}
-        run: |
-          set -euo pipefail
-          mkdir -p packages
-          git clone --depth 1 "https://github.com/${REPOSITORY}.git" "packages/${NAME}"
-          rm -rf "packages/${NAME}/.git"
-          printf '%s\n' "Origem: https://github.com/${REPOSITORY}" > "packages/${NAME}/ORIGEM-DO-CODIGO.txt"
-      - name: Disponibilizar codigo para download
+          UPSTREAM_ID: ${{ matrix.id }}
+        run: python tools/download_upstreams.py --id "$UPSTREAM_ID"
+      - name: Entregar fonte e comprovante SHA-256
         uses: actions/upload-artifact@v4
         with:
-          name: codigo-${{ matrix.name }}
-          path: packages/${{ matrix.name }}/
-          retention-days: 7
-          compression-level: 6
+          name: fonte-${{ matrix.id }}
+          path: |
+            work/upstreams/${{ matrix.id }}/*.tar.gz
+            work/upstreams/${{ matrix.id }}/download-report.json
+          if-no-files-found: error
+          retention-days: 30

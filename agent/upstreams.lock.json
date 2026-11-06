@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "download_only": true,
+  "upstreams": [
+    {
+      "id": "openshorts",
+      "repository": "ws-tyd/openshorts",
+      "revision": "0240abeccc0e18463f6fd3f881767c4bc33ae3a6"
+    },
+    {
+      "id": "ai-youtube-shorts-generator",
+      "repository": "Anil-matcha/AI-Youtube-Shorts-Generator",
+      "revision": "13451d439b71643bd3e9df091e0f3ca786610dc9"
+    },
+    {
+      "id": "novaclip",
+      "repository": "samolubukun/NovaClip",
+      "revision": "70e561e4e0fab68ab65ffa7e26c09c8f33e411e9"
+    },
+    {
+      "id": "chopify",
+      "repository": "mehbul/chopify",
+      "revision": "d576927bf3b764733c97ac1ad324aa9957b0885d"
+    },
+    {
+      "id": "faster-whisper",
+      "repository": "SYSTRAN/faster-whisper",
+      "revision": "2a3a857737d17d974f30d818ebec69ce11929e5c"
+    },
+    {
+      "id": "pyscenedetect",
+      "repository": "Breakthrough/PySceneDetect",
+      "revision": "c5ce29c73751e77139e838bd9ce9ab66a8e71a23"
+    },
+    {
+      "id": "auto-editor",
+      "repository": "WyattBlue/auto-editor",
+      "revision": "ddf5812dde4133d32a4e4a4b91b1b5a76d1960f8"
+    },
+    {
+      "id": "piper1-gpl",
+      "repository": "OHF-Voice/piper1-gpl",
+      "revision": "10880972db9e0aca101fed350eadf8f49deefe9f"
+    }
+  ]
+}

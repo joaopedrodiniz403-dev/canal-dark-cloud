@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "upstream_count": 8,
+  "source_manifest_empty": true,
+  "youtube_credentials_configured": false,
+  "paid_services_authorized": false,
+  "public_publication_authorized": false,
+  "full_product_ready": false
+}
