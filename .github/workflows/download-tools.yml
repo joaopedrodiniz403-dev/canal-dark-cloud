@@ -1,0 +1,42 @@
+name: Baixar ferramentas de cortes (somente codigo)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/download-tools.yml'
+permissions:
+  contents: read
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: OpenShorts
+            repository: ws-tyd/openshorts
+          - name: AI-Youtube-Shorts-Generator
+            repository: Anil-matcha/AI-Youtube-Shorts-Generator
+          - name: NovaClip
+            repository: samolubukun/NovaClip
+          - name: Chopify
+            repository: mehbul/chopify
+    steps:
+      - name: Baixar codigo fonte sem executar
+        env:
+          REPOSITORY: ${{ matrix.repository }}
+          NAME: ${{ matrix.name }}
+        run: |
+          set -euo pipefail
+          mkdir -p packages
+          git clone --depth 1 "https://github.com/${REPOSITORY}.git" "packages/${NAME}"
+          rm -rf "packages/${NAME}/.git"
+          printf '%s\n' "Origem: https://github.com/${REPOSITORY}" > "packages/${NAME}/ORIGEM-DO-CODIGO.txt"
+      - name: Disponibilizar codigo para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: codigo-${{ matrix.name }}
+          path: packages/${{ matrix.name }}/
+          retention-days: 7
+          compression-level: 6
