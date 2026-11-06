@@ -1,0 +1,52 @@
+[
+  {
+    "title": "O erro mais comum nas senhas",
+    "hook": "Sua senha pode estar colocando várias contas em risco.",
+    "scenes": [
+      "Repetir a mesma senha em serviços diferentes aumenta o impacto de um vazamento.",
+      "Uma senha única para cada conta reduz esse risco.",
+      "Um gerenciador de senhas e a verificação em duas etapas ajudam a proteger seus acessos."
+    ],
+    "source": "https://www.cisa.gov/secure-our-world/use-strong-passwords"
+  },
+  {
+    "title": "Por que o QR Code funciona?",
+    "hook": "Como um desenho consegue abrir um site?",
+    "scenes": [
+      "Os quadradinhos codificam dados que uma câmera consegue interpretar.",
+      "Os padrões nos cantos ajudam a identificar a orientação do código.",
+      "Confira o endereço antes de abrir um QR Code desconhecido."
+    ],
+    "source": "https://www.qrcode.com/en/about/"
+  },
+  {
+    "title": "O que é phishing?",
+    "hook": "Nem toda mensagem urgente é verdadeira.",
+    "scenes": [
+      "Phishing é uma tentativa de enganar pessoas para obter dados ou acessos.",
+      "Mensagens falsas podem imitar lojas, bancos e serviços conhecidos.",
+      "Verifique o remetente e entre pelo aplicativo oficial, em vez de clicar por impulso."
+    ],
+    "source": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+  },
+  {
+    "title": "Por que ativar duas etapas?",
+    "hook": "Uma senha sozinha pode não ser suficiente.",
+    "scenes": [
+      "A autenticação multifator exige uma segunda confirmação para acessar uma conta.",
+      "Ela dificulta invasões mesmo quando uma senha é descoberta.",
+      "Prefira aplicativos autenticadores ou chaves de segurança quando disponíveis."
+    ],
+    "source": "https://www.cisa.gov/secure-our-world/turn-mfa"
+  },
+  {
+    "title": "O que é engenharia social?",
+    "hook": "Às vezes, o ataque começa com uma conversa.",
+    "scenes": [
+      "Engenharia social usa manipulação para convencer alguém a revelar informações.",
+      "Um golpista pode fingir ser suporte técnico ou alguém de confiança.",
+      "Desconfie de pressão para agir rápido e confirme solicitações por outro canal."
+    ],
+    "source": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+  }
+]
