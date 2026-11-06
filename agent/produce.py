@@ -56,7 +56,7 @@ def render_original(topic, dest):
              "-t", str(seconds), "-shortest", str(mp4)])
         parts.append(mp4)
     concat = tmp / "concat.txt"
-    concat.write_text("".join("file '" + p.name + "'\\n" for p in parts))
+    concat.write_text("".join("file '" + p.name + "'\n" for p in parts))
     run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-f", "concat",
          "-safe", "0", "-i", str(concat), "-c", "copy", str(dest)])
 
@@ -117,7 +117,7 @@ for i, item in enumerate(candidates[:MAX], 1):
     "generated_at":datetime.now(timezone.utc).isoformat(),
     "target":MAX, "produced":sum(e["status"]=="PENDING_HUMAN_REVIEW" for e in REPORT),
     "publication_enabled":False, "items":REPORT}, ensure_ascii=False, indent=2), encoding="utf-8")
-(OUT / "README.txt").write_text("REVISAO OBRIGATORIA: videos nao publicados automaticamente.\\nVerifique audio, imagem, direitos, fatos e originalidade antes do upload.\\n", encoding="utf-8")
+(OUT / "README.txt").write_text("REVISAO OBRIGATORIA: videos nao publicados automaticamente.\nVerifique audio, imagem, direitos, fatos e originalidade antes do upload.\n", encoding="utf-8")
 print(json.dumps(REPORT, ensure_ascii=False, indent=2))
 if not any(e["status"]=="PENDING_HUMAN_REVIEW" for e in REPORT):
     sys.exit(1)
