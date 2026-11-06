@@ -1,0 +1,34 @@
+name: Nuvem Escura AI - produzir 5 Shorts para revisao
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 13 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: nuvem-escura-producao
+  cancel-in-progress: false
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar ferramentas gratuitas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
+          python -m pip install -r requirements.txt
+      - name: Gerar fila de Shorts
+        run: python agent/produce.py
+      - name: Entregar videos e relatorio para aprovacao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuvem-escura-revisao-${{ github.run_number }}
+          path: output/agent/
+          if-no-files-found: warn
+          retention-days: 7
