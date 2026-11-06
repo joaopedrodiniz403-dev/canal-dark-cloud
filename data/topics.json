@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Como funciona um QR Code?",
+    "scenes": [
+      "Um QR Code é uma forma de guardar informações em um desenho de quadradinhos.",
+      "A câmera identifica padrões de contraste e interpreta os dados codificados.",
+      "Antes de abrir um link de QR Code, confira o endereço para evitar páginas falsas."
+    ],
+    "source": "https://www.qrcode.com/en/about/"
+  },
+  {
+    "title": "Por que usamos senhas diferentes?",
+    "scenes": [
+      "Reutilizar a mesma senha pode colocar várias contas em risco.",
+      "Se uma plataforma sofrer vazamento, criminosos podem tentar a senha em outros serviços.",
+      "Use senhas únicas e ative autenticação em duas etapas sempre que possível."
+    ],
+    "source": "https://www.cisa.gov/secure-our-world/use-strong-passwords"
+  }
+]
