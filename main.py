@@ -61,7 +61,7 @@ for i, content in enumerate(topic["scenes"]):
          "-t", str(round(seconds, 3)), "-shortest", str(part)])
     parts.append(part)
 concat = OUT / "concat.txt"
-concat.write_text("".join(f"file '{p.name}'\\n" for p in parts), encoding="utf-8")
+concat.write_text("".join(f"file '{p.name}'\n" for p in parts), encoding="utf-8")
 video = OUT / "short.mp4"
 run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-f", "concat",
      "-safe", "0", "-i", str(concat), "-c", "copy", str(video)])
@@ -74,7 +74,7 @@ report = {"title": topic["title"], "duration_seconds": round(seconds, 2),
     "resolution": probe, "source": topic["source"],
     "review_required": True, "status": "READY_FOR_HUMAN_REVIEW" if passed else "FAILED"}
 (OUT / "quality_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-(OUT / "metadata.txt").write_text(topic["title"] + " #Shorts\\nFonte para revisão: " + topic["source"], encoding="utf-8")
+(OUT / "metadata.txt").write_text(topic["title"] + " #Shorts\nFonte para revisão: " + topic["source"], encoding="utf-8")
 print(json.dumps(report, ensure_ascii=False))
 if not passed:
     raise RuntimeError("Video failed technical validation")
