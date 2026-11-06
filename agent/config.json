@@ -1,0 +1,12 @@
+{
+  "daily_target": 5,
+  "min_score": 65,
+  "publication_mode": "manual_review",
+  "content_modes": [
+    "original",
+    "authorized_clip"
+  ],
+  "max_duration_seconds": 59,
+  "brand": "Nuvem Escura",
+  "timezone": "America/Sao_Paulo"
+}
