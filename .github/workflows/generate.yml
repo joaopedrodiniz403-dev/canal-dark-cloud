@@ -18,13 +18,21 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
       - name: Testes unitários e renderização real
         run: python -m unittest discover -v
-      - name: Amostra técnica reproduzível (sem fala)
-        run: python -m tests.demo
-      - name: Evidências técnicas
-        if: always()
-        uses: actions/upload-artifact@v4
+  upstream-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
         with:
-          name: evidencia-motor-cortes-${{ github.run_number }}
-          path: output/demo/
-          retention-days: 7
-          if-no-files-found: warn
+          repository: mehbul/chopify
+          ref: d576927bf3b764733c97ac1ad324aa9957b0885d
+          path: work/chopify
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependências mínimas para importar o CLI upstream
+        run: python -m pip install numpy==2.2.6 opencv-python-headless==4.11.0.86
+      - name: Verificar o CLI real do Chopify (sem gerar amostra)
+        run: |
+          python work/chopify/chopify.py --version
+          python work/chopify/chopify.py --help

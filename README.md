@@ -39,3 +39,9 @@ python -m tests.demo
 Os testes renderizam vídeo com movimento e tom de teste, verificam QA e rejeição de áudio silencioso, direitos, caminhos, legendas, timestamps e deduplicação. O demo **não contém fala nem é um Short publicável**: não comprova ASR, qualidade narrativa ou comparação profissional.
 
 Veja [auditoria](docs/AUDIT.md), [evidências e pendências](docs/VALIDATION.md). Rastreamento facial, seleção semântica multimodal, pesquisa de tendências, geração original, YouTube e aprendizado por métricas continuam pendentes. `main.py` e `agent/produce.py` agora chamam o motor real; os geradores antigos de slides foram substituídos.
+
+## Correção do fluxo de testes e backend existente
+
+Fixtures sintéticas são rejeitadas por padrão na produção. Testes internos exigem permissão de código explícita, ficam `INTERNAL_TESTS_ONLY`, não recebem pontuação editorial e não entram na fila de conteúdo. Os relatórios registram `editorial_approved: false` e `publication_approved: false`. O CI deixou de oferecer o padrão colorido como artifact de vídeo.
+
+O [backend Chopify](docs/CHOPIFY.md) foi preparado para utilizar um projeto existente de verdade, com revisão fixa e entrada local autorizada. Sua execução completa com material real ainda está pendente; não é a produção diária padrão.

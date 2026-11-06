@@ -47,6 +47,12 @@ def local_file(root, name):
     return p
 
 
+def reject_test_source(source, transcription=None):
+    backend = str((transcription or {}).get('backend', '')).casefold()
+    if source.get('test_only') is True or 'synthetic' in backend or 'fixture' in backend:
+        raise ValueError('TEST_INPUT_REJECTED: material sintético de teste não pode entrar na produção')
+
+
 def authorize(source, root):
     rights = source.get('rights', {})
     if rights.get('verified') is not True or rights.get('kind') not in {'owned', 'licensed', 'permission'}:
@@ -259,7 +265,7 @@ def qa(path, words, expected):
         'no_long_freeze': 'freeze_start:' not in visual,
         'no_black_interval': 'black_start:' not in visual,
     }
-    return {'passed': all(checks.values()), 'checks': checks, 'duration': duration,
+    return {'passed': all(checks.values()), 'scope': 'technical_only', 'editorial_approved': False, 'publication_approved': False, 'checks': checks, 'duration': duration,
             'audio_rms_dbfs': round(rms_db, 2), 'clipped_sample_fraction': clipping,
             'limitations': ['ASR accuracy and meaning require listening', 'No semantic or legal approval',
                             'Freeze/black detection is a conservative technical gate']}
@@ -274,7 +280,7 @@ def overlaps(a, b):
     return intersection / min(a['end']-a['start'], b['end']-b['start']) > .3
 
 
-def produce(root, manifest, output, state, limit=5, min_score=55, model='small'):
+def produce(root, manifest, output, state, limit=5, min_score=55, model='small', allow_internal_test=False):
     output.mkdir(parents=True, exist_ok=True)
     state.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(state)
@@ -282,11 +288,13 @@ def produce(root, manifest, output, state, limit=5, min_score=55, model='small')
     day = datetime.now(ZoneInfo('America/Sao_Paulo')).date().isoformat()
     budget = max(0, min(5, limit) - db.execute('SELECT count(*) FROM produced WHERE day=?', (day,)).fetchone()[0])
     report = {'version': VERSION, 'generated_at': datetime.now(ZoneInfo('America/Sao_Paulo')).isoformat(),
-              'publication_enabled': False, 'items': [], 'sources': [], 'produced': 0}
+              'publication_enabled': False, 'editorial_approved': False, 'ready_for_review': 0, 'internal_test_count': 0, 'items': [], 'sources': [], 'produced': 0}
     pool = []
     for src in manifest.get('sources', []):
         entry = {'path': src.get('path'), 'status': 'BLOCKED'}
         try:
+            if not allow_internal_test:
+                reject_test_source(src)
             path = authorize(src, root)
             data = probe(path)
             duration = float(data['format']['duration'])
@@ -300,6 +308,8 @@ def produce(root, manifest, output, state, limit=5, min_score=55, model='small')
                 transcription = json.loads(cache.read_text(encoding='utf-8'))
             else:
                 transcription = transcribe(path, model)
+            if not allow_internal_test:
+                reject_test_source(src, transcription)
             words = validate_words(transcription, duration)
             save(cache, transcription)
             proposed = candidates(words)
@@ -327,7 +337,7 @@ def produce(root, manifest, output, state, limit=5, min_score=55, model='small')
             continue
         item = {'id': key, 'status': 'FAILED', 'editorial': c['editorial'], 'rights': c['rights'],
                 'source_sha256': c['source_sha'], 'source_interval': [c['start'], c['end']],
-                'test_only': c['test_only']}
+                'test_only': c['test_only'], 'editorial_approved': False, 'publication_approved': False}
         work = output / key
         work.mkdir(exist_ok=True)
         try:
@@ -343,18 +353,24 @@ def produce(root, manifest, output, state, limit=5, min_score=55, model='small')
             item['description'] = f"Nuvem Escura. Fonte autorizada: {c['rights']['holder']}. #Shorts #NuvemEscura"
             item['editorial_review'] = {'required': True, 'checks': ['contexto e conclusão', 'gancho',
                 'legendas versus fala', 'enquadramento', 'título fiel', 'direitos e originalidade', 'políticas YouTube']}
+            if c['test_only']:
+                item['editorial'] = {'score': None, 'reason': 'Internal fixture is not editorial content'}
             item['status'] = ('TECHNICAL_TEST_ONLY' if c['test_only'] else 'PENDING_HUMAN_REVIEW') if quality['passed'] else 'REJECTED_TECHNICAL_QA'
             if quality['passed']:
                 db.execute('INSERT INTO produced VALUES (?, ?, ?, ?)', (key, content, day, json.dumps(item)))
                 db.commit()
                 report['produced'] += 1
+                if c['test_only']:
+                    report['internal_test_count'] += 1
+                else:
+                    report['ready_for_review'] += 1
                 selected.append(c)
         except Exception as e:
             item['reason'] = str(e)
         save(work / 'report.json', item)
         report['items'].append(item)
     db.close()
-    report['status'] = 'REVIEW_REQUIRED' if report['produced'] else ('EMPTY_QUEUE' if not manifest.get('sources') else 'NO_APPROVED_OUTPUT')
+    report['status'] = 'REVIEW_REQUIRED' if report['ready_for_review'] else 'INTERNAL_TESTS_ONLY' if report['internal_test_count'] else ('EMPTY_QUEUE' if not manifest.get('sources') else 'NO_APPROVED_OUTPUT')
     save(output / 'review_queue.json', report)
     (output / 'REVIEW.md').write_text('# Fila Nuvem Escura\n\nNenhum vídeo publicado.\n\n' + '\n'.join(
         f"- {x['id']}: {x['status']} — {x.get('video', x.get('reason', ''))}" for x in report['items']), encoding='utf-8')

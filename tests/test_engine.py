@@ -70,6 +70,12 @@ class UnitTests(unittest.TestCase):
     def test_overlap(self):
         self.assertTrue(overlaps({'start': 0, 'end': 20}, {'start': 10, 'end': 30}))
 
+    def test_production_rejects_fixtures(self):
+        from nuvem.engine import reject_test_source
+        for source, transcript in [({'test_only': True}, {}), ({}, {'backend': 'synthetic_fixture_not_ASR'})]:
+            with self.assertRaisesRegex(ValueError, 'TEST_INPUT_REJECTED'):
+                reject_test_source(source, transcript)
+
     def test_empty_queue(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
@@ -83,11 +89,15 @@ class IntegrationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d)
             manifest = fixture(p)
-            r = produce(p, manifest, p/'out', p/'state.db', limit=1)
+            r = produce(p, manifest, p/'out', p/'state.db', limit=1, allow_internal_test=True)
             self.assertEqual(r['produced'], 1, json.dumps(r))
             self.assertEqual(r['items'][0]['status'], 'TECHNICAL_TEST_ONLY')
+            self.assertEqual(r['status'], 'INTERNAL_TESTS_ONLY')
+            self.assertEqual(r['ready_for_review'], 0)
+            self.assertIsNone(r['items'][0]['editorial']['score'])
+            self.assertFalse(r['items'][0]['quality']['editorial_approved'])
             self.assertTrue(r['items'][0]['quality']['passed'])
-            again = produce(p, manifest, p/'out2', p/'state.db', limit=5)
+            again = produce(p, manifest, p/'out2', p/'state.db', limit=5, allow_internal_test=True)
             self.assertEqual(again['produced'], 0)
             item = r['items'][0]
             words = json.loads((p/'out'/item['id']/'words.json').read_text())['words']

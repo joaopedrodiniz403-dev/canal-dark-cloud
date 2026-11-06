@@ -34,3 +34,11 @@ Antes de chamar a operação de profissional, medir transcrição, retenção de
 - Nove grupos de legendas; frame com palavra destacada inspecionado visualmente.
 - CLI com cadastro vazio executou e registrou `EMPTY_QUEUE` sem erro.
 - Hash SHA-256 do MP4: `69d5d7a4955513ee1eef77d2bb9339485eb78e74b3829b3ca785dc058ae1c4db`.
+
+## Correção após inspeção da amostra entregue
+
+A amostra sintética anterior não atende à aceitação editorial e não deveria ter sido oferecida como resultado para o canal. Seu `quality.passed` se referia exclusivamente aos testes técnicos. Não havia agente autônomo avaliando narrativa ou entretenimento.
+
+O fluxo foi corrigido: produção rejeita fontes marcadas como teste e transcrições com backend sintético; teste interno requer opt-in de código, não recebe pontuação editorial e não gera `REVIEW_REQUIRED`. QA explicita escopo técnico, aprovação editorial falsa e aprovação de publicação falsa. O CI não publica mais essa fixture como artifact de Short.
+
+Após a correção, 13 testes passaram em 21,723 s, incluindo rejeição de fixtures antes de chamar o backend upstream. O backend Chopify foi preparado e sua documentação está em `CHOPIFY.md`; ainda não foi validado ponta a ponta com conteúdo autorizado real. A tentativa local de importar o CLI upstream falhou por falta de OpenCV; o novo job CI testa especificamente essa importação após instalar dependências.
