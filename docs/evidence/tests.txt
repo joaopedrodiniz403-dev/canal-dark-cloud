@@ -1,0 +1,14 @@
+test_real_render_qa_and_dedupe (tests.test_engine.IntegrationTests.test_real_render_qa_and_dedupe) ... ok
+test_candidates_complete_and_bounded (tests.test_engine.UnitTests.test_candidates_complete_and_bounded) ... ok
+test_captions_escape (tests.test_engine.UnitTests.test_captions_escape) ... ok
+test_empty_queue (tests.test_engine.UnitTests.test_empty_queue) ... ok
+test_gap_timeline (tests.test_engine.UnitTests.test_gap_timeline) ... ok
+test_overlap (tests.test_engine.UnitTests.test_overlap) ... ok
+test_path_escape_and_symlink (tests.test_engine.UnitTests.test_path_escape_and_symlink) ... ok
+test_rights_fail_closed (tests.test_engine.UnitTests.test_rights_fail_closed) ... ok
+test_timestamps (tests.test_engine.UnitTests.test_timestamps) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 20.722s
+
+OK

@@ -1,0 +1,54 @@
+{
+  "run_url": "https://github.com/joaopedrodiniz403-dev/canal-dark-cloud/actions/runs/42239811705",
+  "status": "success",
+  "artifacts": [
+    {
+      "name": "fonte-piper1-gpl",
+      "size_in_bytes": 25422974,
+      "id": 13515576106,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515576106/zip"
+    },
+    {
+      "name": "fonte-faster-whisper",
+      "size_in_bytes": 21361448,
+      "id": 13515406110,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515406110/zip"
+    },
+    {
+      "name": "fonte-pyscenedetect",
+      "size_in_bytes": 58076905,
+      "id": 13515246211,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515246211/zip"
+    },
+    {
+      "name": "fonte-chopify",
+      "size_in_bytes": 4636838,
+      "id": 13515116185,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515116185/zip"
+    },
+    {
+      "name": "fonte-ai-youtube-shorts-generator",
+      "size_in_bytes": 1320713,
+      "id": 13515051369,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515051369/zip"
+    },
+    {
+      "name": "fonte-openshorts",
+      "size_in_bytes": 89630731,
+      "id": 13515026339,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13515026339/zip"
+    },
+    {
+      "name": "fonte-auto-editor",
+      "size_in_bytes": 11652199,
+      "id": 13514731207,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13514731207/zip"
+    },
+    {
+      "name": "fonte-novaclip",
+      "size_in_bytes": 101503892,
+      "id": 13514401503,
+      "url": "https://api.github.com/repos/joaopedrodiniz403-dev/canal-dark-cloud/actions/artifacts/13514401503/zip"
+    }
+  ]
+}

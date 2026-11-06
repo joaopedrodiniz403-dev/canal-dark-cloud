@@ -1,0 +1,2 @@
+# Optional: needed only for automatic speech recognition; CPU int8, no paid API.
+faster-whisper==1.2.1
