@@ -1,29 +1,30 @@
-name: Gerar Short para revisao
+name: Validar motor de cortes
 on:
+  pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  produce:
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Instalar dependencias
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
-          python -m pip install -r requirements.txt
-      - name: Gerar video
-        run: python main.py
-      - name: Disponibilizar video e relatorio
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - name: Testes unitários e renderização real
+        run: python -m unittest discover -v
+      - name: Amostra técnica reproduzível (sem fala)
+        run: python -m tests.demo
+      - name: Evidências técnicas
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: short-para-revisao-${{ github.run_number }}
-          path: output/
-          if-no-files-found: warn
+          name: evidencia-motor-cortes-${{ github.run_number }}
+          path: output/demo/
           retention-days: 7
+          if-no-files-found: warn

@@ -1,19 +1,41 @@
-# Canal Dark Cloud v1
+# NUVEM ESCURA AI — motor de cortes v2
 
-Protótipo gratuito de produção de YouTube Shorts para revisão humana.
+Primeira implementação de cortes a partir de arquivos locais com direitos atestados pelo operador. Sem serviços pagos e sem publicação no YouTube. A qualidade editorial exige revisão; não há promessa de viralização.
 
-## Como executar
-1. Abra a aba **Actions** no GitHub.
-2. Selecione **Gerar Short para revisao** e clique em **Run workflow**.
-3. Aguarde a execução e baixe o ZIP em **Artifacts**.
-4. Revise o MP4, os fatos e os direitos de uso antes de publicar.
+## Executar
 
-O agendamento usa 14:17 UTC (11:17 em Brasília). O GitHub pode atrasar ou suspender execuções agendadas.
+Requer Python 3.11+, FFmpeg com libass/libx264 e fontes DejaVu. Para transcrição automática em português, instale `python -m pip install -r requirements-cuts.txt` (faster-whisper CPU/int8). O primeiro uso baixa o modelo `small`, exige rede e espaço; uma GPU não é obrigatória. Transcrição pode ser lenta em lives longas. Não usamos eSpeak ou slides como alternativa.
 
-## Limites
-- Roteiros são pautas pré-revisadas em `data/topics.json`, não geração por IA.
-- A voz é gerada pelo espeak-ng e pode soar robótica.
-- Os vídeos usam fundos gráficos simples, não imagens externas.
-- Não há publicação automática no YouTube.
-- O relatório técnico não substitui revisão humana.
-- Para manter conteúdo original, expanda os roteiros e visuais antes de publicar regularmente.
+1. Coloque vídeo próprio/licenciado e, opcionalmente, transcrição em `media/authorized/`.
+2. Cadastre a fonte em `agent/sources.json`, conforme [formato de entrada](docs/INPUT.md).
+3. Execute `python -m nuvem.engine` ou `python agent/produce.py`.
+4. Abra `output/cuts/REVIEW.md` e `review_queue.json`. Cada diretório contém MP4, palavras sincronizadas, ASS, timeline, log FFmpeg e relatório.
+
+Uma fila vazia gera relatório `EMPTY_QUEUE`, sem fabricar vídeos. Fonte inválida fica `BLOCKED`. Saída aprovada tecnicamente fica `PENDING_HUMAN_REVIEW`; conteúdo sintético de teste fica `TECHNICAL_TEST_ONLY`. Nenhum destes estados autoriza publicação.
+
+## O que funciona
+
+- Bloqueio por ausência de atestado e referência de direitos; caminhos confinados e proteção contra symlinks externos.
+- ASR word-level com faster-whisper ou transcrição fornecida, validada por timestamps.
+- Candidatos por frases completas, duração 12–59 s, ranking heurístico explicável em português, supressão de sobreposição.
+- Remoção de pausas longas com margem de respiração e remapeamento de legendas.
+- 1080×1920/30 fps, cena inteira sobre fundo desfocado, áudio original normalizado, legendas curtas com palavra ativa em destaque e marca Nuvem Escura.
+- QA de decodificação, duração, dimensões, áudio ausente/inaudível/clipping, congelamento, preto e limites temporais das legendas.
+- SQLite com hash da fonte, trecho, texto e limite de cinco saídas por dia em São Paulo. Execute somente um produtor por banco; o workflow usa `concurrency`.
+
+## Automação e limites
+
+O workflow `agent.yml` está preparado para 13:23 UTC / 10:23 em São Paulo, diariamente, após integração na branch padrão. O GitHub pode atrasar agendas. Atualmente não há mídia cadastrada. Arquivos ignorados pelo Git não chegam ao runner: disponibilize somente mídia autorizada no checkout ou adicione uma integração privada de armazenamento antes da produção em nuvem. Não coloque tokens nem documentos privados no repositório público.
+
+O histórico é restaurado por Actions Cache. Cache pode expirar/ser removido: a deduplicação entre execuções só é garantida enquanto o banco persistir. Para uma operação contínua, será necessário armazenamento durável do SQLite e da mídia. Artifacts de revisão expiram após sete dias. Não rodamos download de streamers nem serviços pagos.
+
+## Verificar
+
+```sh
+python -m unittest discover -v
+python -m tests.demo
+```
+
+Os testes renderizam vídeo com movimento e tom de teste, verificam QA e rejeição de áudio silencioso, direitos, caminhos, legendas, timestamps e deduplicação. O demo **não contém fala nem é um Short publicável**: não comprova ASR, qualidade narrativa ou comparação profissional.
+
+Veja [auditoria](docs/AUDIT.md), [evidências e pendências](docs/VALIDATION.md). Rastreamento facial, seleção semântica multimodal, pesquisa de tendências, geração original, YouTube e aprendizado por métricas continuam pendentes. `main.py` e `agent/produce.py` agora chamam o motor real; os geradores antigos de slides foram substituídos.
