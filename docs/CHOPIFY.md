@@ -23,7 +23,7 @@ Cadastre previamente um arquivo local autorizado em `agent/sources.json`, no for
 
 Ele executa o pipeline real do Chopify: ASR small/CPU, seleção com evidências, 15–59 segundos, até cinco cortes, 9:16, legendas bold de três palavras, remoção de pausas e áudio normalizado. Salva log, MP4/SRT/metadados e relatório de proveniência em `output/chopify`. Uma saída produzida fica `AWAITING_TECHNICAL_AND_EDITORIAL_REVIEW`; retorno zero do processo nunca vira aprovação.
 
-Esta integração é explícita e experimental. Não substitui a produção diária ainda. Falta executar com uma gravação autorizada real, verificar rastreamento no tipo de gameplay, fidelidade das legendas e coerência. Também falta integrar o histórico diário/deduplicação do coordenador a este backend; não usar como operação contínua antes disso.
+Esta integração é experimental. O ciclo de nuvem usa este backend, mas sua aceitação com gravação real ainda está pendente. Falta executar com uma gravação autorizada real, verificar rastreamento no tipo de gameplay, fidelidade das legendas e coerência. O coordenador de nuvem adiciona limite diário e deduplicação por fonte/vídeo, com estado versionado na branch `nuvem-state`. A validação editorial real continua obrigatória.
 
 ## Evidência e bloqueios
 

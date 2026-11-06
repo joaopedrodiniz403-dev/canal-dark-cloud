@@ -42,3 +42,11 @@ A amostra sintética anterior não atende à aceitação editorial e não deveri
 O fluxo foi corrigido: produção rejeita fontes marcadas como teste e transcrições com backend sintético; teste interno requer opt-in de código, não recebe pontuação editorial e não gera `REVIEW_REQUIRED`. QA explicita escopo técnico, aprovação editorial falsa e aprovação de publicação falsa. O CI não publica mais essa fixture como artifact de Short.
 
 Após a correção, 13 testes passaram em 21,723 s, incluindo rejeição de fixtures antes de chamar o backend upstream. O backend Chopify foi preparado e sua documentação está em `CHOPIFY.md`; ainda não foi validado ponta a ponta com conteúdo autorizado real. A tentativa local de importar o CLI upstream falhou por falta de OpenCV; o novo job CI testa especificamente essa importação após instalar dependências.
+
+## Ciclo de nuvem e aquisição de repositórios
+
+- Oito snapshots completos de fontes foram baixados no GitHub Actions, com commits fixos e comprovantes de integridade. Execução 42239811705: sucesso; oito artifacts `fonte-*` confirmados.
+- 22 testes locais passaram em 20,284 s: direitos, rejeição de fixtures, QA/renderização real, contrato de saída upstream, limite diário, deduplicação entre ciclos, parsing SRT e lease do estado remoto.
+- CLI `nuvem.cloud_cycle` foi executado com cadastro vazio: `BLOCKED_NO_AUTHORIZED_MEDIA`, zero vídeos produzidos, nenhuma aprovação editorial ou publicação.
+- Testes de estado/orquestração usam doubles controlados; não representam integração real com mídia/YouTube. Leitura/gravação do estado remoto deve ser confirmada pela execução real do workflow na branch padrão.
+- Agente recorrente Codex: criado e ativo após autorização do usuário para pausar uma tarefa e abrir vaga. Primeira execução ainda não observada; seleção de ambiente herdada sem detalhes retornados. GitHub Actions usa runner de nuvem explícito.

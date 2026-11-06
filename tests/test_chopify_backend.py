@@ -27,3 +27,17 @@ class ChopifyAdapterTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 execute({'path': 'source.mp4'}, p, p, p/'out')
             process.assert_not_called()
+
+    def test_real_output_discovery_contract(self):
+        import json
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            (p/'source.mp4').write_bytes(b'authorized test input')
+            (p/'output/exports').mkdir(parents=True)
+            (p/'output/exports/real-output.mp4').write_bytes(b'upstream output contract')
+            source = {'path': 'source.mp4', 'rights': {'verified': True, 'kind': 'owned',
+                'reference': 'test', 'holder': 'test', 'verified_by': 'test', 'verified_at': '2026-11-06'}}
+            with patch('nuvem.chopify_backend.verify_checkout'), patch('nuvem.chopify_backend.subprocess.run'):
+                result = execute(source, p, p, p/'output', max_clips=2)
+            self.assertEqual(result['outputs'], ['exports/real-output.mp4'])
+            self.assertFalse(result['editorial_approved'])

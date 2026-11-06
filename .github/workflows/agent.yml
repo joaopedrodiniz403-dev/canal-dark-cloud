@@ -1,8 +1,15 @@
-name: Nuvem Escura - cortes autorizados
+name: Nuvem Escura - ciclo de nuvem
 on:
   workflow_dispatch:
   schedule:
     - cron: '23 13 * * *'
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent.yml
+      - agent/sources.json
+      - nuvem/cloud_cycle.py
+      - nuvem/github_state.py
 permissions:
   contents: read
 concurrency:
@@ -12,39 +19,50 @@ jobs:
   produce:
     runs-on: ubuntu-latest
     timeout-minutes: 55
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Instalar FFmpeg e ASR local
+      - name: Restaurar historico duravel (nunca zerar por erro de rede)
+        id: state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: python -m nuvem.github_state pull
+      - name: Verificar se ha fontes cadastradas
+        id: sources
+        run: python -c "import json,os; n=len(json.load(open('agent/sources.json'))['sources']); open(os.environ['GITHUB_OUTPUT'],'a').write('count='+str(n)+'\n')"
+      - uses: actions/checkout@v4
+        if: steps.sources.outputs.count != '0'
+        with:
+          repository: mehbul/chopify
+          ref: d576927bf3b764733c97ac1ad324aa9957b0885d
+          path: work/chopify
+          persist-credentials: false
+      - name: Instalar somente o backend escolhido
+        if: steps.sources.outputs.count != '0'
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install -r requirements-cuts.txt
-      - name: Restaurar histórico e modelos
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            work/state.sqlite
-            ~/.cache/huggingface
-          key: cuts-v2-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: cuts-v2-
-      - name: Produzir até cinco cortes para revisão
-        run: python -m nuvem.engine
-      - name: Persistir histórico
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            work/state.sqlite
-            ~/.cache/huggingface
-          key: cuts-v2-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Entregar fila, legendas, logs e relatórios
+          python -m pip install -r work/chopify/requirements.txt
+      - name: Executar cortes reais ou registrar bloqueio de entrada
+        run: python -m nuvem.cloud_cycle
+      - name: Persistir historico com deteccao de conflito
+        if: always() && steps.state.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: python -m nuvem.github_state push
+      - name: Entregar videos reais, legendas e relatorios
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nuvem-escura-revisao-${{ github.run_number }}
-          path: output/cuts/
-          if-no-files-found: error
+          name: nuvem-escura-ciclo-${{ github.run_number }}
+          path: output/cloud/
+          if-no-files-found: warn
           retention-days: 7

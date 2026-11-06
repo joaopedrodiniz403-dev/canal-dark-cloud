@@ -1,6 +1,6 @@
 """Explicit, rights-gated integration with a pinned upstream Chopify checkout.
 
-Not enabled by the daily workflow until validated on authorized real recordings.
+Used by the cloud cycle; real-recording editorial acceptance is still pending.
 """
 import argparse
 import json
@@ -26,17 +26,17 @@ def verify_checkout(upstream):
         raise ValueError('Missing upstream CLI')
 
 
-def command(upstream, source, project, export):
+def command(upstream, source, project, export, max_clips=5):
     # No URLs, paid API, public upload, LLM server or arbitrary CLI injection.
     return [sys.executable, str(upstream/'chopify.py'), str(source),
             '--workdir', str(project), '--out', str(export), '--aspect', '9:16',
-            '--min-len', '15', '--max-len', '59', '--max-clips', '5',
+            '--min-len', '15', '--max-len', '59', '--max-clips', str(max(1, min(5, int(max_clips)))),
             '--min-score', '8', '--whisper-model', 'small', '--device', 'cpu',
             '--style', 'bold', '--words-per-cue', '3', '--tighten', '--loudnorm',
             '--no-input', '--explain']
 
 
-def execute(source, root, upstream, output):
+def execute(source, root, upstream, output, max_clips=5):
     reject_test_source(source)
     path = authorize(source, root)
     # A supplied fixture transcript must not be used as evidence of a real cut.
@@ -48,7 +48,7 @@ def execute(source, root, upstream, output):
     report = {'backend': REPOSITORY, 'revision': REVISION, 'source': str(path),
               'status': 'FAILED', 'editorial_approved': False, 'publication_approved': False,
               'publication_enabled': False, 'rights': source['rights'], 'outputs': []}
-    args = command(upstream, path, output/'project', output/'exports')
+    args = command(upstream, path, output/'project', output/'exports', max_clips)
     report['command'] = args
     try:
         with (output/'pipeline.log').open('w') as log:

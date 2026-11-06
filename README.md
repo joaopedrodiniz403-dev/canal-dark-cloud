@@ -1,47 +1,36 @@
-# NUVEM ESCURA AI — motor de cortes v2
+# NUVEM ESCURA AI
 
-Primeira implementação de cortes a partir de arquivos locais com direitos atestados pelo operador. Sem serviços pagos e sem publicação no YouTube. A qualidade editorial exige revisão; não há promessa de viralização.
+Sistema em desenvolvimento para cortes autorizados e fila de revisão. Não é uma fábrica profissional concluída. Sem mídia autorizada, registra bloqueio e não fabrica vídeos de demonstração. Publicação pública permanece desativada.
 
-## Executar
+## Nuvem
 
-Requer Python 3.11+, FFmpeg com libass/libx264 e fontes DejaVu. Para transcrição automática em português, instale `python -m pip install -r requirements-cuts.txt` (faster-whisper CPU/int8). O primeiro uso baixa o modelo `small`, exige rede e espaço; uma GPU não é obrigatória. Transcrição pode ser lenta em lives longas. Não usamos eSpeak ou slides como alternativa.
+- **Baixar repositorios auditaveis:** snapshots fixos de oito projetos, com licenças, commit e SHA-256. Não instala ou executa os projetos baixados. Os artifacts `fonte-*` expiram após 30 dias.
+- **Nuvem Escura - ciclo de nuvem:** GitHub Actions diariamente às 13:23 UTC / 10:23 em São Paulo, após integração na branch padrão, ou manualmente. Usa o pipeline real Chopify, até cinco saídas por dia e revisão humana obrigatória. Sem fontes cadastradas gera `BLOCKED_NO_AUTHORIZED_MEDIA`.
+- **Validar motor de cortes:** testes unitários, renderização técnica real e importação do CLI upstream. Testes sintéticos são internos, não vídeos para o canal.
 
-1. Coloque vídeo próprio/licenciado e, opcionalmente, transcrição em `media/authorized/`.
-2. Cadastre a fonte em `agent/sources.json`, conforme [formato de entrada](docs/INPUT.md).
-3. Execute `python -m nuvem.engine` ou `python agent/produce.py`.
-4. Abra `output/cuts/REVIEW.md` e `review_queue.json`. Cada diretório contém MP4, palavras sincronizadas, ASS, timeline, log FFmpeg e relatório.
+O coordenador usa `nuvem/cloud_cycle.py`; o estado durável fica em `.nuvem/state.json` na branch separada `nuvem-state`. Contém hashes/datas/contagens, sem segredos. Acesso ao estado usa o token temporário do Actions. Se leitura ou gravação falhar, a execução falha; não zera histórico por erro de rede. Vídeos e relatórios de revisão expiram após sete dias: armazenamento privado durável de mídia ainda precisa ser integrado.
 
-Uma fila vazia gera relatório `EMPTY_QUEUE`, sem fabricar vídeos. Fonte inválida fica `BLOCKED`. Saída aprovada tecnicamente fica `PENDING_HUMAN_REVIEW`; conteúdo sintético de teste fica `TECHNICAL_TEST_ONLY`. Nenhum destes estados autoriza publicação.
+O agente recorrente do Codex é separado do workflow de vídeo. Suas instruções estão em [AGENTS.md](AGENTS.md) e [CLOUD_AGENT.md](docs/CLOUD_AGENT.md). A tarefa recorrente foi criada e ativada para retomar o trabalho diariamente pela manhã, por volta das 8h de São Paulo, a partir de 7/11/2026. A primeira execução do agente ainda não foi observada. O workflow GitHub é independente dessa tarefa.
 
-## O que funciona
+## Conteúdo de verdade
 
-- Bloqueio por ausência de atestado e referência de direitos; caminhos confinados e proteção contra symlinks externos.
-- ASR word-level com faster-whisper ou transcrição fornecida, validada por timestamps.
-- Candidatos por frases completas, duração 12–59 s, ranking heurístico explicável em português, supressão de sobreposição.
-- Remoção de pausas longas com margem de respiração e remapeamento de legendas.
-- 1080×1920/30 fps, cena inteira sobre fundo desfocado, áudio original normalizado, legendas curtas com palavra ativa em destaque e marca Nuvem Escura.
-- QA de decodificação, duração, dimensões, áudio ausente/inaudível/clipping, congelamento, preto e limites temporais das legendas.
-- SQLite com hash da fonte, trecho, texto e limite de cinco saídas por dia em São Paulo. Execute somente um produtor por banco; o workflow usa `concurrency`.
+1. Disponibilize gravação própria/licenciada com fala em `media/authorized/`.
+2. Cadastre direitos em `agent/sources.json`, conforme [INPUT.md](docs/INPUT.md).
+3. Siga [CHOPIFY.md](docs/CHOPIFY.md) para instalar somente o backend selecionado.
+4. Revise contexto, recorte, sincronismo, título, direitos e qualidade dos MP4 reais.
 
-## Automação e limites
+Arquivos de mídia são ignorados pelo Git e não chegam automaticamente ao runner. Não coloque documentos privados ou tokens no repositório público. Sem integração de armazenamento ou fonte disponível no checkout, a produção em nuvem continua bloqueada.
 
-O workflow `agent.yml` está preparado para 13:23 UTC / 10:23 em São Paulo, diariamente, após integração na branch padrão. O GitHub pode atrasar agendas. Atualmente não há mídia cadastrada. Arquivos ignorados pelo Git não chegam ao runner: disponibilize somente mídia autorizada no checkout ou adicione uma integração privada de armazenamento antes da produção em nuvem. Não coloque tokens nem documentos privados no repositório público.
+O caminho Chopify faz ASR CPU, análise de candidatos com evidências de áudio/imagem, rastreamento facial do upstream, legendas, cortes de pausas e tratamento de áudio. O ciclo aplica QA técnico e encaminha saídas aprovadas tecnicamente para `PENDING_HUMAN_REVIEW`. Não há aprovação editorial automática validada. Pontuação é heurística e não promete viralização.
 
-O histórico é restaurado por Actions Cache. Cache pode expirar/ser removido: a deduplicação entre execuções só é garantida enquanto o banco persistir. Para uma operação contínua, será necessário armazenamento durável do SQLite e da mídia. Artifacts de revisão expiram após sete dias. Não rodamos download de streamers nem serviços pagos.
+O motor menor `python -m nuvem.engine` continua disponível para experimentos locais com FFmpeg e transcrição word-level, mas não é a produção diária selecionada. Nunca usa eSpeak ou slides como fallback.
 
-## Verificar
+## Verificação e pendências
 
 ```sh
 python -m unittest discover -v
-python -m tests.demo
 ```
 
-Os testes renderizam vídeo com movimento e tom de teste, verificam QA e rejeição de áudio silencioso, direitos, caminhos, legendas, timestamps e deduplicação. O demo **não contém fala nem é um Short publicável**: não comprova ASR, qualidade narrativa ou comparação profissional.
+22 testes locais passaram na implementação do ciclo de nuvem. Os testes de orquestração usam um backend controlado para verificar regras; o teste de renderização realmente invoca FFmpeg. Isso não comprova um Short profissional com fala real.
 
-Veja [auditoria](docs/AUDIT.md), [evidências e pendências](docs/VALIDATION.md). Rastreamento facial, seleção semântica multimodal, pesquisa de tendências, geração original, YouTube e aprendizado por métricas continuam pendentes. `main.py` e `agent/produce.py` agora chamam o motor real; os geradores antigos de slides foram substituídos.
-
-## Correção do fluxo de testes e backend existente
-
-Fixtures sintéticas são rejeitadas por padrão na produção. Testes internos exigem permissão de código explícita, ficam `INTERNAL_TESTS_ONLY`, não recebem pontuação editorial e não entram na fila de conteúdo. Os relatórios registram `editorial_approved: false` e `publication_approved: false`. O CI deixou de oferecer o padrão colorido como artifact de vídeo.
-
-O [backend Chopify](docs/CHOPIFY.md) foi preparado para utilizar um projeto existente de verdade, com revisão fixa e entrada local autorizada. Sua execução completa com material real ainda está pendente; não é a produção diária padrão.
+Pesquisa de tendências, criação de originais com movimento/TTS neural, seleção semântica em português, avaliação editorial por IA, armazenamento privado, YouTube/OAuth e métricas permanecem em desenvolvimento. Consulte [auditoria](docs/AUDIT.md) e [evidências](docs/VALIDATION.md).
