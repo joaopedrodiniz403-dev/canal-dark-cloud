@@ -10,6 +10,7 @@ on:
       - agent/sources.json
       - nuvem/cloud_cycle.py
       - nuvem/github_state.py
+      - nuvem/media_ingest.py
 permissions:
   contents: read
 concurrency:
@@ -51,6 +52,12 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
           python -m pip install -r work/chopify/requirements.txt
       - name: Executar cortes reais ou registrar bloqueio de entrada
+        env:
+          NUVEM_MEDIA_URL_1: ${{ secrets.NUVEM_MEDIA_URL_1 }}
+          NUVEM_MEDIA_URL_2: ${{ secrets.NUVEM_MEDIA_URL_2 }}
+          NUVEM_MEDIA_URL_3: ${{ secrets.NUVEM_MEDIA_URL_3 }}
+          NUVEM_MEDIA_URL_4: ${{ secrets.NUVEM_MEDIA_URL_4 }}
+          NUVEM_MEDIA_URL_5: ${{ secrets.NUVEM_MEDIA_URL_5 }}
         run: python -m nuvem.cloud_cycle
       - name: Persistir historico com deteccao de conflito
         if: always() && steps.state.outcome == 'success'

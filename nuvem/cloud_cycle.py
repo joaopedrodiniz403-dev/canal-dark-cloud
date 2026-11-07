@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 from .chopify_backend import execute, REVISION
 from .engine import authorize, reject_test_source, digest, probe, qa, save
 from .github_state import validate
+from .media_ingest import materialize
 
 
 def caption_cues(path):
@@ -38,6 +39,7 @@ def cycle(root, manifest, upstream, output, state, runner=execute, inspector=qa)
             continue
         try:
             reject_test_source(source)
+            entry['ingestion'] = materialize(source, root)
             path = authorize(source, root)
             source_hash = digest(path)
             if source_hash in state['sources']:

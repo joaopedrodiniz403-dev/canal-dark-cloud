@@ -57,10 +57,12 @@ class GitHubState:
         if ref is None:
             base = self.api('GET', '/git/ref/heads/' + self.default_branch)
             self.api('POST', '/git/refs', {'ref': 'refs/heads/' + BRANCH, 'sha': base['object']['sha']})
+            state = empty_state()
+            self.store(state)
+            return state
         data = self.api('GET', '/contents/' + FILE + '?ref=' + BRANCH, missing=True)
         if data is None:
-            self.file_sha = None
-            return empty_state()
+            raise RuntimeError('Durable state file missing on existing branch; refusing history reset')
         self.file_sha = data['sha']
         return validate(json.loads(base64.b64decode(data['content'])))
 

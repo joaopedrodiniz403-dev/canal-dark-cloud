@@ -50,3 +50,9 @@ Após a correção, 13 testes passaram em 21,723 s, incluindo rejeição de fixt
 - CLI `nuvem.cloud_cycle` foi executado com cadastro vazio: `BLOCKED_NO_AUTHORIZED_MEDIA`, zero vídeos produzidos, nenhuma aprovação editorial ou publicação.
 - Testes de estado/orquestração usam doubles controlados; não representam integração real com mídia/YouTube. Leitura/gravação do estado remoto deve ser confirmada pela execução real do workflow na branch padrão.
 - Agente recorrente Codex: criado e ativo após autorização do usuário para pausar uma tarefa e abrir vaga. Primeira execução ainda não observada; seleção de ambiente herdada sem detalhes retornados. GitHub Actions usa runner de nuvem explícito.
+
+## 7/11/2026 — ingestão remota e proteção do histórico
+
+Ingestão HTTPS com URL em Actions Secret implementada, com hash obrigatório e sem registrar URL assinada. Corrigido reset silencioso quando state.json desaparece de uma branch existente. 33 testes locais passaram em 19,491 s; evidências e bloqueios em `runs-2026-11-07.md`. Sem gravação autorizada fornecida: transporte testado com respostas controladas, aceitação editorial e download real ainda pendentes.
+
+As execuções de CI e de download na main (42240994514 e 42240994478) foram confirmadas com sucesso; oito snapshots estão presentes. O estado da produção foi confirmado no último ciclo (42240994464), que não gerou vídeos por falta de entrada autorizada.
