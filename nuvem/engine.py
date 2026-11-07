@@ -53,14 +53,19 @@ def reject_test_source(source, transcription=None):
         raise ValueError('TEST_INPUT_REJECTED: material sintético de teste não pode entrar na produção')
 
 
-def authorize(source, root):
+def validate_rights(source):
     rights = source.get('rights', {})
     if rights.get('verified') is not True or rights.get('kind') not in {'owned', 'licensed', 'permission'}:
         raise ValueError('Direitos de reutilização não verificados')
     for key in ('reference', 'holder', 'verified_by', 'verified_at'):
         if not isinstance(rights.get(key), str) or not rights[key].strip():
             raise ValueError('Falta evidência de direitos: ' + key)
+    return rights
+
+
+def authorize(source, root):
     # This validates the operator's attestation, not the legal truth of the claim.
+    validate_rights(source)
     return local_file(root, source['path'])
 
 

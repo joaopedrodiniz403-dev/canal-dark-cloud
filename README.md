@@ -8,7 +8,7 @@ Sistema em desenvolvimento para cortes autorizados e fila de revisão. Não é u
 - **Nuvem Escura - ciclo de nuvem:** GitHub Actions diariamente às 13:23 UTC / 10:23 em São Paulo, após integração na branch padrão, ou manualmente. Usa o pipeline real Chopify, até cinco saídas por dia e revisão humana obrigatória. Sem fontes cadastradas gera `BLOCKED_NO_AUTHORIZED_MEDIA`.
 - **Validar motor de cortes:** testes unitários, renderização técnica real e importação do CLI upstream. Testes sintéticos são internos, não vídeos para o canal.
 
-O coordenador usa `nuvem/cloud_cycle.py`; o estado durável fica em `.nuvem/state.json` na branch separada `nuvem-state`. Contém hashes/datas/contagens, sem segredos. Acesso ao estado usa o token temporário do Actions. Se leitura ou gravação falhar, a execução falha; não zera histórico por erro de rede. Vídeos e relatórios de revisão expiram após sete dias: armazenamento privado durável de mídia ainda precisa ser integrado.
+O coordenador usa `nuvem/cloud_cycle.py`; o estado durável fica em `.nuvem/state.json` na branch separada `nuvem-state`. Contém hashes/datas/contagens, sem segredos. Acesso ao estado usa o token temporário do Actions. Se leitura ou gravação falhar, a execução falha; não zera histórico por erro de rede. Vídeos e relatórios de revisão expiram após sete dias: ingestão de objeto privado por URL em Actions Secret foi implementada (ver INPUT.md), mas nenhum objeto/secret real foi configurado e a persistência durável dos vídeos finais continua pendente.
 
 O agente recorrente do Codex é separado do workflow de vídeo. Suas instruções estão em [AGENTS.md](AGENTS.md) e [CLOUD_AGENT.md](docs/CLOUD_AGENT.md). A tarefa recorrente foi criada e ativada para retomar o trabalho diariamente pela manhã, por volta das 8h de São Paulo, a partir de 7/11/2026. A primeira execução do agente ainda não foi observada. O workflow GitHub é independente dessa tarefa.
 
@@ -19,7 +19,7 @@ O agente recorrente do Codex é separado do workflow de vídeo. Suas instruçõe
 3. Siga [CHOPIFY.md](docs/CHOPIFY.md) para instalar somente o backend selecionado.
 4. Revise contexto, recorte, sincronismo, título, direitos e qualidade dos MP4 reais.
 
-Arquivos de mídia são ignorados pelo Git e não chegam automaticamente ao runner. Não coloque documentos privados ou tokens no repositório público. Sem integração de armazenamento ou fonte disponível no checkout, a produção em nuvem continua bloqueada.
+Arquivos de mídia são ignorados pelo Git e não chegam automaticamente ao runner. Não coloque documentos privados ou tokens no repositório público. Para mídia remota, cadastre a origem e o hash conforme INPUT.md e guarde a URL num dos cinco Actions Secrets de mídia. Sem objeto/secret válido ou fonte disponível no checkout, a produção continua bloqueada.
 
 O caminho Chopify faz ASR CPU, análise de candidatos com evidências de áudio/imagem, rastreamento facial do upstream, legendas, cortes de pausas e tratamento de áudio. O ciclo aplica QA técnico e encaminha saídas aprovadas tecnicamente para `PENDING_HUMAN_REVIEW`. Não há aprovação editorial automática validada. Pontuação é heurística e não promete viralização.
 
