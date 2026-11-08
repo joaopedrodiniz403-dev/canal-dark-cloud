@@ -1,0 +1,24 @@
+{
+  "terms": [
+    "GTA RP",
+    "GTA roleplay",
+    "FiveM",
+    "Paulinho o Loko",
+    "Yuri22",
+    "Coringa LOUD",
+    "Dona19",
+    "streamer",
+    "streamers"
+  ],
+  "max_age_days": 7,
+  "feeds": [
+    {
+      "id": "google-news-gta-rp",
+      "url": "https://news.google.com/rss/search?q=%22GTA+RP%22+OR+FiveM+OR+%22Paulinho+o+Loko%22+OR+Yuri22+OR+%22Coringa+LOUD%22+OR+Dona19+when%3A7d&hl=pt-BR&gl=BR&ceid=BR%3Apt-419"
+    },
+    {
+      "id": "google-trends-br",
+      "url": "https://trends.google.com/trending/rss?geo=BR"
+    }
+  ]
+}

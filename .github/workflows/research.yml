@@ -1,0 +1,39 @@
+name: Nuvem Escura - pesquisa de pautas
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+  pull_request:
+    paths:
+      - nuvem/research.py
+      - agent/research.json
+      - tests/test_research.py
+      - .github/workflows/research.yml
+permissions:
+  contents: read
+concurrency:
+  group: nuvem-research-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Testar coleta, datas, fontes e separacao de direitos
+        run: python -m unittest tests.test_research -v
+      - name: Consultar RSS publicos sem baixar midia
+        run: python -m nuvem.research
+      - name: Disponibilizar pesquisa e evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuvem-pesquisa-${{ github.run_number }}
+          path: output/research/
+          if-no-files-found: warn
+          retention-days: 14
