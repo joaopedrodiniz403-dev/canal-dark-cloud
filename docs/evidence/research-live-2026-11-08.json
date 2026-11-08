@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "generated_at": "2026-11-08T11:21:25.990536+00:00",
+  "sources": [
+    {
+      "id": "google-news-gta-rp",
+      "status": "FETCHED",
+      "url": "https://news.google.com/rss/search?q=%22GTA+RP%22+OR+FiveM+OR+%22Paulinho+o+Loko%22+OR+Yuri22+OR+%22Coringa+LOUD%22+OR+Dona19+when%3A7d&hl=pt-BR&gl=BR&ceid=BR%3Apt-419",
+      "content_sha256": "9daa435e1a4ca0bcd35be2272b6d43614df417a8fe78a5d97149bcac167a298c",
+      "counts": {
+        "seen": 2,
+        "irrelevant": 1,
+        "invalid": 0,
+        "old": 0,
+        "future": 0
+      }
+    },
+    {
+      "id": "google-trends-br",
+      "status": "FETCHED",
+      "url": "https://trends.google.com/trending/rss?geo=BR",
+      "content_sha256": "59888f9fcfa99ca2577501a35f44062338a93022c5d0b5f1534234d4d0ca0bbe",
+      "counts": {
+        "seen": 10,
+        "irrelevant": 10,
+        "invalid": 0,
+        "old": 0,
+        "future": 0
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "34418da70534d58b5310",
+      "title": "Vazamento do chefe do Twitch sugere GTA 6 Online só em 2027 e acende alerta para streamers - Rádio Geek",
+      "matched_terms": [
+        "streamers"
+      ],
+      "research_score": 24.78,
+      "score_components": {
+        "keyword_relevance": 20,
+        "freshness": 4.78
+      },
+      "score_kind": "research_priority_not_virality_prediction",
+      "evidence": [
+        {
+          "feed_id": "google-news-gta-rp",
+          "feed_url": "https://news.google.com/rss/search?q=%22GTA+RP%22+OR+FiveM+OR+%22Paulinho+o+Loko%22+OR+Yuri22+OR+%22Coringa+LOUD%22+OR+Dona19+when%3A7d&hl=pt-BR&gl=BR&ceid=BR%3Apt-419",
+          "item_url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5NaU1qUURsU1VMNUlXM0hfUFFIZlpIZUFzNHBxdkZLQlNFQ3YxeUFwZ2FXU056NTdSa3pJWDJleFlHZ3hYOEV5RFQ0U2k2ZVFuNmhTdkYyUUR2dEo1U2UyNjZlOTRUUXR5YjBnWm13?oc=5",
+          "published_at": "2026-11-02T07:25:59+00:00",
+          "retrieved_at": "2026-11-08T11:21:25.990536+00:00",
+          "publisher": "Rádio Geek",
+          "publisher_url": "https://radiogeekbr.com.br",
+          "article_content_verified": false
+        }
+      ],
+      "reuse_rights_verified": false,
+      "production_eligible": false,
+      "editorial_review_required": true
+    }
+  ],
+  "publication_enabled": false,
+  "media_download_enabled": false,
+  "limitations": [
+    "Headlines and feed dates only; article content not verified",
+    "Public availability grants no reuse rights",
+    "No YouTube views, retention or virality prediction"
+  ],
+  "status": "OK"
+}
