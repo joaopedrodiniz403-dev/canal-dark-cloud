@@ -49,7 +49,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install -r work/chopify/requirements.txt
+          python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Executar cortes reais ou registrar bloqueio de entrada
         run: python -m nuvem.cloud_cycle
       - name: Persistir historico com deteccao de conflito

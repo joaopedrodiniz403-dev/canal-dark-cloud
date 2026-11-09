@@ -15,7 +15,7 @@ git clone https://github.com/mehbul/chopify.git work/chopify
 git -C work/chopify checkout d576927bf3b764733c97ac1ad324aa9957b0885d
 python -m venv work/chopify-venv
 # Linux/macOS; no Windows use work/chopify-venv/Scripts/python.exe
-work/chopify-venv/bin/python -m pip install -r work/chopify/requirements.txt
+work/chopify-venv/bin/python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
 work/chopify-venv/bin/python -m nuvem.chopify_backend --upstream work/chopify
 ```
 
@@ -32,3 +32,7 @@ Esta integração é experimental. O ciclo de nuvem usa este backend, mas sua ac
 - CI específico instala NumPy/OpenCV e tenta importar o CLI verdadeiro, separado dos testes do adaptador. Isso não valida ASR nem um vídeo final.
 - Modelo Whisper e dependências de produção precisam ser instalados/baixados. Nenhuma API paga é necessária para este caminho.
 - A amostra colorida anterior era uma fixture interna com tom sonoro. Ela não é uma referência de qualidade e não deve ser oferecida como entrega de Short.
+
+## Diagnóstico com fala real (9/11/2026)
+
+O backend foi executado com atores/voz natural de Tears of Steel, sob CC BY 3.0. A validação expôs e corrigiu incompatibilidade PyAV 19 / faster-whisper 1.2.1. Transcrição, seleção e render diagnóstico foram executados, mas seleção (5,03/10) e erros de legenda/crop impediram aprovação editorial. Veja [REAL_MEDIA_VALIDATION.md](REAL_MEDIA_VALIDATION.md). Isso não valida português/GTA RP nem habilita publicação.

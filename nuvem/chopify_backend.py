@@ -36,6 +36,28 @@ def command(upstream, source, project, export, max_clips=5):
             '--no-input', '--explain']
 
 
+def empty_selection_rejection(output, returncode):
+    """Recognize only the pinned CLI's explicit completed selection rejection."""
+    if returncode != 1:
+        return None
+    try:
+        selection = json.loads((output/'project/selection.json').read_text())
+        project = json.loads((output/'project/project.json').read_text())
+        segments = json.loads((output/'project/segments.json').read_text())
+        error = project.get('error', '')
+        log = (output/'pipeline.log').read_text(errors='replace')
+        if (type(selection.get('passing')) is int and selection['passing'] == 0
+                and selection.get('min_score') == 8.0 and segments == []
+                and project.get('stage') == 'render' and project.get('status') == 'failed'
+                and error.startswith('Candidate scores ')
+                and 'No clips reached 8.0.' in error
+                and ('Chopify: ' + error) in log):
+            return selection
+    except (OSError, ValueError, TypeError, AttributeError):
+        pass
+    return None
+
+
 def execute(source, root, upstream, output, max_clips=5):
     reject_test_source(source)
     path = authorize(source, root)
@@ -52,8 +74,13 @@ def execute(source, root, upstream, output, max_clips=5):
     report['command'] = args
     try:
         with (output/'pipeline.log').open('w') as log:
-            subprocess.run(args, cwd=upstream, stdout=log, stderr=subprocess.STDOUT,
-                           check=True, timeout=3000)
+            completed = subprocess.run(args, cwd=upstream, stdout=log, stderr=subprocess.STDOUT,
+                                       check=False, timeout=3000)
+        rejection = empty_selection_rejection(output, completed.returncode)
+        if rejection is not None:
+            report.update(status='NO_CANDIDATES', reason='EDITORIAL_THRESHOLD', selection=rejection)
+            return report
+        completed.check_returncode()
         outputs = sorted((output/'exports').glob('*.mp4'))
         report['outputs'] = [str(p.relative_to(output)) for p in outputs]
         report['status'] = 'AWAITING_TECHNICAL_AND_EDITORIAL_REVIEW' if outputs else 'NO_CANDIDATES'

@@ -1,0 +1,60 @@
+name: Nuvem Escura - diagnostico com fala real CC BY
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - nuvem/real_validation.py
+      - nuvem/chopify_backend.py
+      - requirements-cuts.txt
+      - tests/test_audio_runtime.py
+      - tests/test_selection_rejection.py
+      - .github/workflows/real-media-validation.yml
+permissions:
+  contents: read
+concurrency:
+  group: nuvem-real-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_HOME: ${{ github.workspace }}/work/hf-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: mehbul/chopify
+          ref: d576927bf3b764733c97ac1ad324aa9957b0885d
+          path: work/chopify
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar somente o backend de validacao
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
+      - name: Testar contrato de audio e rejeicao de candidatos
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation -v
+      - name: Executar filme licenciado com fala real (sem aprovacao editorial)
+        run: python -m nuvem.real_validation --download > work/validation-console.log 2>&1
+      - name: Entregar diagnostico com atribuicao e relatorios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostico-real-NAO-APROVADO-${{ github.run_number }}
+          path: |
+            work/real-validation/validation.json
+            work/real-validation/ATTRIBUTION.txt
+            work/real-validation/README.md
+            work/real-validation/reference/
+            work/real-validation/pipeline/pipeline.log
+            work/real-validation/pipeline/project/transcript.json
+            work/real-validation/pipeline/project/selection.json
+            work/validation-console.log
+          if-no-files-found: warn
+          retention-days: 7
