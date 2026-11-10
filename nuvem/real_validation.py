@@ -8,7 +8,7 @@ import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from .chopify_backend import execute, REVISION, verify_checkout
+from .chopify_backend import execute, REVISION, verify_checkout, asr_model as checked_model, ASR_MODELS
 from .engine import digest, probe, qa, run, save
 
 MOVIE_URL = 'https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov'
@@ -53,7 +53,8 @@ def obtain_movie(path):
         temporary.unlink(missing_ok=True)
 
 
-def validate(movie,upstream,output):
+def validate(movie,upstream,output,model='small'):
+    model=checked_model(model)
     if digest(movie)!=MOVIE_SHA: raise ValueError('Unverified validation movie')
     verify_checkout(upstream)
     output.mkdir(parents=True,exist_ok=True)
@@ -70,7 +71,7 @@ def validate(movie,upstream,output):
         # Always derive from the verified original; never trust an edited cached excerpt.
         run(['ffmpeg','-y','-hide_banner','-loglevel','error','-ss','22','-i',movie,'-t','24',
              '-c:v','libx264','-preset','veryfast','-crf','18','-threads','2','-c:a','aac',scene])
-        source={'path':scene.name,'rights':{'verified':True,'kind':'licensed','holder':'Blender Foundation',
+        source={'path':scene.name,'asr_model':model,'rights':{'verified':True,'kind':'licensed','holder':'Blender Foundation',
                 'reference':LICENSE_URL,'verified_by':'Primary film sharing/download pages checked by agent',
                 'verified_at':'2026-11-09'}}
         pipeline=execute(source,media,upstream,output/'pipeline')
@@ -139,10 +140,11 @@ def main():
     p.add_argument('--upstream',type=Path,default=Path('work/chopify'))
     p.add_argument('--output',type=Path,default=Path('work/real-validation'))
     p.add_argument('--download',action='store_true')
+    p.add_argument('--asr-model',choices=ASR_MODELS,default='small')
     args=p.parse_args()
     if args.download: obtain_movie(args.movie)
     if not args.movie.exists(): p.error('Movie missing; use --download for the fixed licensed source')
-    report=validate(args.movie.resolve(),args.upstream.resolve(),args.output.resolve())
+    report=validate(args.movie.resolve(),args.upstream.resolve(),args.output.resolve(),model=args.asr_model)
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
 

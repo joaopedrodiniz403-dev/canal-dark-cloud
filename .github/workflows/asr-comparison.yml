@@ -1,0 +1,54 @@
+name: Nuvem Escura - comparacao ASR em fala real
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - nuvem/asr_benchmark.py
+      - tests/test_asr_benchmark.py
+      - .github/workflows/asr-comparison.yml
+permissions:
+  contents: read
+concurrency:
+  group: nuvem-asr-comparison-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_HOME: ${{ github.workspace }}/work/hf-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: mehbul/chopify
+          ref: d576927bf3b764733c97ac1ad324aa9957b0885d
+          path: work/chopify
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar somente o backend escolhido com PyAV compativel
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
+      - name: Testar comparabilidade e configuracao de modelo
+        run: python -m unittest tests.test_asr_benchmark -v
+      - name: Comparar small e medium no mesmo audio licenciado
+        run: python -m nuvem.asr_benchmark --download
+      - name: Entregar medidas e transcricoes sem arquivo original nem modelos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparacao-ASR-NAO-APROVADA-${{ github.run_number }}
+          path: |
+            work/asr-comparison/comparison.json
+            work/asr-comparison/small.json
+            work/asr-comparison/medium.json
+            work/asr-comparison/*.log
+            work/asr-comparison/ATTRIBUTION.txt
+          if-no-files-found: warn
+          retention-days: 14

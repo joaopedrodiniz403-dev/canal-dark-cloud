@@ -1,6 +1,12 @@
 name: Nuvem Escura - diagnostico com fala real CC BY
 on:
   workflow_dispatch:
+    inputs:
+      asr_model:
+        description: Modelo ASR para o diagnostico (nao altera producao)
+        type: choice
+        options: [small, medium]
+        default: small
   pull_request:
     paths:
       - nuvem/real_validation.py
@@ -41,7 +47,9 @@ jobs:
       - name: Testar contrato de audio e rejeicao de candidatos
         run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation -v
       - name: Executar filme licenciado com fala real (sem aprovacao editorial)
-        run: python -m nuvem.real_validation --download > work/validation-console.log 2>&1
+        env:
+          ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
+        run: python -m nuvem.real_validation --download --asr-model "$ASR_MODEL" > work/validation-console.log 2>&1
       - name: Entregar diagnostico com atribuicao e relatorios
         if: always()
         uses: actions/upload-artifact@v4

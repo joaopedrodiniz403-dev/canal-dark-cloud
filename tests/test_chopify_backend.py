@@ -38,7 +38,11 @@ class ChopifyAdapterTests(unittest.TestCase):
             (p/'output/exports/real-output.mp4').write_bytes(b'upstream output contract')
             source = {'path': 'source.mp4', 'rights': {'verified': True, 'kind': 'owned',
                 'reference': 'test', 'holder': 'test', 'verified_by': 'test', 'verified_at': '2026-11-06'}}
-            with patch('nuvem.chopify_backend.verify_checkout'), patch('nuvem.chopify_backend.subprocess.run', return_value=subprocess.CompletedProcess([], 0)):
+            source['asr_model']='medium'
+            with patch('nuvem.chopify_backend.verify_checkout'), patch('nuvem.chopify_backend.subprocess.run', return_value=subprocess.CompletedProcess([], 0)) as backend:
                 result = execute(source, p, p, p/'output', max_clips=2)
             self.assertEqual(result['outputs'], ['exports/real-output.mp4'])
             self.assertFalse(result['editorial_approved'])
+            self.assertEqual(result['asr_model'],'medium')
+            args=backend.call_args.args[0]
+            self.assertEqual(args[args.index('--whisper-model')+1],'medium')

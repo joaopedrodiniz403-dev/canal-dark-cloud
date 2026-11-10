@@ -11,6 +11,13 @@ from .engine import authorize, reject_test_source, save
 
 REPOSITORY = 'https://github.com/mehbul/chopify'
 REVISION = 'd576927bf3b764733c97ac1ad324aa9957b0885d'
+ASR_MODELS = ('small', 'medium')
+
+
+def asr_model(value='small'):
+    if not isinstance(value, str) or value not in ASR_MODELS:
+        raise ValueError('ASR_MODEL_UNSUPPORTED: choose small or medium')
+    return value
 
 
 def verify_checkout(upstream):
@@ -26,12 +33,13 @@ def verify_checkout(upstream):
         raise ValueError('Missing upstream CLI')
 
 
-def command(upstream, source, project, export, max_clips=5):
+def command(upstream, source, project, export, max_clips=5, model='small'):
+    model = asr_model(model)
     # No URLs, paid API, public upload, LLM server or arbitrary CLI injection.
     return [sys.executable, str(upstream/'chopify.py'), str(source),
             '--workdir', str(project), '--out', str(export), '--aspect', '9:16',
             '--min-len', '15', '--max-len', '59', '--max-clips', str(max(1, min(5, int(max_clips)))),
-            '--min-score', '8', '--whisper-model', 'small', '--device', 'cpu',
+            '--min-score', '8', '--whisper-model', model, '--device', 'cpu',
             '--style', 'bold', '--words-per-cue', '3', '--tighten', '--loudnorm',
             '--no-input', '--explain']
 
@@ -60,6 +68,7 @@ def empty_selection_rejection(output, returncode):
 
 def execute(source, root, upstream, output, max_clips=5):
     reject_test_source(source)
+    model = asr_model(source.get('asr_model', 'small'))
     path = authorize(source, root)
     # A supplied fixture transcript must not be used as evidence of a real cut.
     if source.get('transcript'):
@@ -69,8 +78,8 @@ def execute(source, root, upstream, output, max_clips=5):
     output.mkdir(parents=True, exist_ok=True)
     report = {'backend': REPOSITORY, 'revision': REVISION, 'source': str(path),
               'status': 'FAILED', 'editorial_approved': False, 'publication_approved': False,
-              'publication_enabled': False, 'rights': source['rights'], 'outputs': []}
-    args = command(upstream, path, output/'project', output/'exports', max_clips)
+              'publication_enabled': False, 'rights': source['rights'], 'outputs': [], 'asr_model': model}
+    args = command(upstream, path, output/'project', output/'exports', max_clips, model)
     report['command'] = args
     try:
         with (output/'pipeline.log').open('w') as log:

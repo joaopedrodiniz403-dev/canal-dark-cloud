@@ -38,3 +38,7 @@ O MP4 tem marca “DIAGNOSTIC - NOT APPROVED”, crédito visível e metadados d
 Em 9/11, a transcrição real produziu 68 tokens word-level. WER normalizado: **16% (12 erros / 75 unidades de referência)**. Score do candidato: **5,03/10**, abaixo de 8; **zero saídas automáticas**. O render diagnóstico durou ~20,92 s em 1080×1920 e passou nas oito verificações técnicas. Houve rosto detectado em 76 de 104 amostras, mas o crop também manteve uma pessoa enquanto a outra falava. Transcrição e enquadramento **não receberam aprovação editorial**.
 
 Falta validar/corrigir o comportamento em português e GTA RP, rastreamento de falante, transcrição em música/ruído e seleção semântica. Este teste real não conclui os critérios do sistema profissional.
+
+## Comparação de ASR (10/11/2026)
+
+O campo opcional `asr_model` permite small/medium por fonte, mantendo small quando omitido. O comparador real mediu 16% versus 13,33% WER, com custo de CPU maior; isso não aprovou legendas, não alterou o padrão e não valida português. Veja [ASR_COMPARISON.md](ASR_COMPARISON.md). Na execução manual, `nuvem.real_validation --asr-model medium` permite inspecionar o render com o outro modelo; a marca de diagnóstico e todas as reprovações continuam obrigatórias.

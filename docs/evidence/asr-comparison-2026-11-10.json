@@ -1,0 +1,744 @@
+{
+  "status": "COMPARED_NO_EDITORIAL_APPROVAL",
+  "generated_at": "2026-11-10T11:27:20.319989+00:00",
+  "source_movie_url": "https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov",
+  "source_movie_sha256": "efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f",
+  "interval": [
+    22,
+    46
+  ],
+  "license_url": "https://creativecommons.org/licenses/by/3.0/",
+  "attribution": "(CC) Blender Foundation | mango.blender.org — Tears of Steel — CC BY 3.0. Excerpt, crop, captions and audio normalization modified. No endorsement implied.",
+  "upstream_revision": "d576927bf3b764733c97ac1ad324aa9957b0885d",
+  "production_eligible": false,
+  "publication_enabled": false,
+  "results": [
+    {
+      "model": "small",
+      "source_sha256": "cd8b8c09b44f190481115b5750e37652df1e664d7859cb516b7fdbbf64312014",
+      "reference_sha256": "bd04e28ec7cd72ade13250e5a6965269ce4b531567df0cc246044cf854f357d7",
+      "device": "cpu",
+      "compute_type": "int8",
+      "cpu_threads": 4,
+      "language": "en",
+      "load_seconds": 4.45,
+      "transcribe_seconds": 9.328,
+      "load_time_includes_download_if_needed": true,
+      "word_count": 68,
+      "transcript": " You're  a  jerk,  Tom.  Look,  Celia,  we  have  to  follow  our  passions.  You  have  your  robotics,  and  I  just  want  to  be  awesome  in  space.  Why  don't  you  just  admit  that  you're  freaked  out  by  my  robot  hand?  I'm  not  freaked  out,  but  it's  all  right,  fine.  I'm  freaked  out.  I'm  having  nightmares  that  I'm  being  chased  by  this  giant  robotic  class.  Oh,  God,  Edward,  Tom,  we're  done.",
+      "words": [
+        {
+          "word": " You're",
+          "start": 1.04,
+          "end": 1.4
+        },
+        {
+          "word": " a",
+          "start": 1.4,
+          "end": 1.48
+        },
+        {
+          "word": " jerk,",
+          "start": 1.48,
+          "end": 1.9
+        },
+        {
+          "word": " Tom.",
+          "start": 2.1,
+          "end": 2.24
+        },
+        {
+          "word": " Look,",
+          "start": 2.48,
+          "end": 2.66
+        },
+        {
+          "word": " Celia,",
+          "start": 2.86,
+          "end": 3.22
+        },
+        {
+          "word": " we",
+          "start": 3.38,
+          "end": 3.46
+        },
+        {
+          "word": " have",
+          "start": 3.46,
+          "end": 3.64
+        },
+        {
+          "word": " to",
+          "start": 3.64,
+          "end": 3.78
+        },
+        {
+          "word": " follow",
+          "start": 3.78,
+          "end": 4.08
+        },
+        {
+          "word": " our",
+          "start": 4.08,
+          "end": 4.28
+        },
+        {
+          "word": " passions.",
+          "start": 4.28,
+          "end": 4.84
+        },
+        {
+          "word": " You",
+          "start": 5.34,
+          "end": 5.44
+        },
+        {
+          "word": " have",
+          "start": 5.44,
+          "end": 5.58
+        },
+        {
+          "word": " your",
+          "start": 5.58,
+          "end": 5.7
+        },
+        {
+          "word": " robotics,",
+          "start": 5.7,
+          "end": 6.14
+        },
+        {
+          "word": " and",
+          "start": 6.3,
+          "end": 6.36
+        },
+        {
+          "word": " I",
+          "start": 6.36,
+          "end": 6.46
+        },
+        {
+          "word": " just",
+          "start": 6.46,
+          "end": 6.58
+        },
+        {
+          "word": " want",
+          "start": 6.58,
+          "end": 6.74
+        },
+        {
+          "word": " to",
+          "start": 6.74,
+          "end": 6.84
+        },
+        {
+          "word": " be",
+          "start": 6.84,
+          "end": 6.94
+        },
+        {
+          "word": " awesome",
+          "start": 6.94,
+          "end": 7.44
+        },
+        {
+          "word": " in",
+          "start": 7.44,
+          "end": 7.62
+        },
+        {
+          "word": " space.",
+          "start": 7.62,
+          "end": 7.88
+        },
+        {
+          "word": " Why",
+          "start": 8.46,
+          "end": 8.82
+        },
+        {
+          "word": " don't",
+          "start": 8.82,
+          "end": 9.08
+        },
+        {
+          "word": " you",
+          "start": 9.08,
+          "end": 9.2
+        },
+        {
+          "word": " just",
+          "start": 9.2,
+          "end": 9.44
+        },
+        {
+          "word": " admit",
+          "start": 9.44,
+          "end": 9.8
+        },
+        {
+          "word": " that",
+          "start": 9.8,
+          "end": 10.0
+        },
+        {
+          "word": " you're",
+          "start": 10.0,
+          "end": 10.24
+        },
+        {
+          "word": " freaked",
+          "start": 10.24,
+          "end": 10.9
+        },
+        {
+          "word": " out",
+          "start": 10.9,
+          "end": 11.1
+        },
+        {
+          "word": " by",
+          "start": 11.1,
+          "end": 11.3
+        },
+        {
+          "word": " my",
+          "start": 11.3,
+          "end": 11.5
+        },
+        {
+          "word": " robot",
+          "start": 11.5,
+          "end": 11.86
+        },
+        {
+          "word": " hand?",
+          "start": 11.86,
+          "end": 12.26
+        },
+        {
+          "word": " I'm",
+          "start": 12.62,
+          "end": 12.92
+        },
+        {
+          "word": " not",
+          "start": 12.92,
+          "end": 13.02
+        },
+        {
+          "word": " freaked",
+          "start": 13.02,
+          "end": 13.24
+        },
+        {
+          "word": " out,",
+          "start": 13.24,
+          "end": 13.44
+        },
+        {
+          "word": " but",
+          "start": 13.56,
+          "end": 13.66
+        },
+        {
+          "word": " it's",
+          "start": 13.66,
+          "end": 14.0
+        },
+        {
+          "word": " all",
+          "start": 14.0,
+          "end": 14.78
+        },
+        {
+          "word": " right,",
+          "start": 14.78,
+          "end": 15.88
+        },
+        {
+          "word": " fine.",
+          "start": 15.98,
+          "end": 16.24
+        },
+        {
+          "word": " I'm",
+          "start": 16.64,
+          "end": 16.8
+        },
+        {
+          "word": " freaked",
+          "start": 16.8,
+          "end": 17.02
+        },
+        {
+          "word": " out.",
+          "start": 17.02,
+          "end": 17.36
+        },
+        {
+          "word": " I'm",
+          "start": 17.5,
+          "end": 17.54
+        },
+        {
+          "word": " having",
+          "start": 17.54,
+          "end": 17.66
+        },
+        {
+          "word": " nightmares",
+          "start": 17.66,
+          "end": 18.0
+        },
+        {
+          "word": " that",
+          "start": 18.0,
+          "end": 18.26
+        },
+        {
+          "word": " I'm",
+          "start": 18.26,
+          "end": 18.34
+        },
+        {
+          "word": " being",
+          "start": 18.34,
+          "end": 18.5
+        },
+        {
+          "word": " chased",
+          "start": 18.5,
+          "end": 18.8
+        },
+        {
+          "word": " by",
+          "start": 18.8,
+          "end": 18.98
+        },
+        {
+          "word": " this",
+          "start": 18.98,
+          "end": 19.1
+        },
+        {
+          "word": " giant",
+          "start": 19.1,
+          "end": 19.42
+        },
+        {
+          "word": " robotic",
+          "start": 19.42,
+          "end": 20.02
+        },
+        {
+          "word": " class.",
+          "start": 20.02,
+          "end": 20.38
+        },
+        {
+          "word": " Oh,",
+          "start": 20.48,
+          "end": 20.5
+        },
+        {
+          "word": " God,",
+          "start": 20.5,
+          "end": 20.64
+        },
+        {
+          "word": " Edward,",
+          "start": 20.88,
+          "end": 20.96
+        },
+        {
+          "word": " Tom,",
+          "start": 21.2,
+          "end": 21.36
+        },
+        {
+          "word": " we're",
+          "start": 22.24,
+          "end": 22.54
+        },
+        {
+          "word": " done.",
+          "start": 22.54,
+          "end": 22.8
+        }
+      ],
+      "word_errors": 12,
+      "reference_words": 75,
+      "hypothesis_words": 77,
+      "wer": 0.16,
+      "reference_scope": "official English subtitles; selected opening dialogue, not on-screen text"
+    },
+    {
+      "model": "medium",
+      "source_sha256": "cd8b8c09b44f190481115b5750e37652df1e664d7859cb516b7fdbbf64312014",
+      "reference_sha256": "bd04e28ec7cd72ade13250e5a6965269ce4b531567df0cc246044cf854f357d7",
+      "device": "cpu",
+      "compute_type": "int8",
+      "cpu_threads": 4,
+      "language": "en",
+      "load_seconds": 3.836,
+      "transcribe_seconds": 34.758,
+      "load_time_includes_download_if_needed": true,
+      "word_count": 67,
+      "transcript": " You're  a  jerk,  Tom.  Look,  Celia,  we  have  to  follow  our  passions.  You  have  your  robotics  and  I  just  want  to  be  awesome  in  space.  Why  don't  you  just  admit  that  you're  freaked  out  by  my  robot  hand?  I'm  not  freaked  out  by  it's...  All  right,  fine.  I'm  freaked  out.  I'm  having  nightmares  that  I'm  being  chased  by  this  giant  robotic  glass.  Oh,  whatever,  Tom.  We're  done.",
+      "words": [
+        {
+          "word": " You're",
+          "start": 1.04,
+          "end": 1.7
+        },
+        {
+          "word": " a",
+          "start": 1.7,
+          "end": 1.8
+        },
+        {
+          "word": " jerk,",
+          "start": 1.8,
+          "end": 2.06
+        },
+        {
+          "word": " Tom.",
+          "start": 2.3,
+          "end": 2.3
+        },
+        {
+          "word": " Look,",
+          "start": 2.5,
+          "end": 2.9
+        },
+        {
+          "word": " Celia,",
+          "start": 2.9,
+          "end": 3.32
+        },
+        {
+          "word": " we",
+          "start": 3.38,
+          "end": 3.52
+        },
+        {
+          "word": " have",
+          "start": 3.52,
+          "end": 3.74
+        },
+        {
+          "word": " to",
+          "start": 3.74,
+          "end": 3.98
+        },
+        {
+          "word": " follow",
+          "start": 3.98,
+          "end": 4.18
+        },
+        {
+          "word": " our",
+          "start": 4.18,
+          "end": 4.5
+        },
+        {
+          "word": " passions.",
+          "start": 4.5,
+          "end": 4.92
+        },
+        {
+          "word": " You",
+          "start": 5.36,
+          "end": 5.52
+        },
+        {
+          "word": " have",
+          "start": 5.52,
+          "end": 5.66
+        },
+        {
+          "word": " your",
+          "start": 5.66,
+          "end": 5.9
+        },
+        {
+          "word": " robotics",
+          "start": 5.9,
+          "end": 6.26
+        },
+        {
+          "word": " and",
+          "start": 6.26,
+          "end": 6.38
+        },
+        {
+          "word": " I",
+          "start": 6.38,
+          "end": 6.54
+        },
+        {
+          "word": " just",
+          "start": 6.54,
+          "end": 6.72
+        },
+        {
+          "word": " want",
+          "start": 6.72,
+          "end": 6.8
+        },
+        {
+          "word": " to",
+          "start": 6.8,
+          "end": 6.92
+        },
+        {
+          "word": " be",
+          "start": 6.92,
+          "end": 7.16
+        },
+        {
+          "word": " awesome",
+          "start": 7.16,
+          "end": 7.52
+        },
+        {
+          "word": " in",
+          "start": 7.52,
+          "end": 7.78
+        },
+        {
+          "word": " space.",
+          "start": 7.78,
+          "end": 8.08
+        },
+        {
+          "word": " Why",
+          "start": 8.48,
+          "end": 8.86
+        },
+        {
+          "word": " don't",
+          "start": 8.86,
+          "end": 9.1
+        },
+        {
+          "word": " you",
+          "start": 9.1,
+          "end": 9.32
+        },
+        {
+          "word": " just",
+          "start": 9.32,
+          "end": 9.58
+        },
+        {
+          "word": " admit",
+          "start": 9.58,
+          "end": 9.86
+        },
+        {
+          "word": " that",
+          "start": 9.86,
+          "end": 10.06
+        },
+        {
+          "word": " you're",
+          "start": 10.06,
+          "end": 10.72
+        },
+        {
+          "word": " freaked",
+          "start": 10.72,
+          "end": 11.0
+        },
+        {
+          "word": " out",
+          "start": 11.0,
+          "end": 11.2
+        },
+        {
+          "word": " by",
+          "start": 11.2,
+          "end": 11.4
+        },
+        {
+          "word": " my",
+          "start": 11.4,
+          "end": 11.7
+        },
+        {
+          "word": " robot",
+          "start": 11.7,
+          "end": 12.04
+        },
+        {
+          "word": " hand?",
+          "start": 12.04,
+          "end": 12.38
+        },
+        {
+          "word": " I'm",
+          "start": 12.62,
+          "end": 12.92
+        },
+        {
+          "word": " not",
+          "start": 12.92,
+          "end": 13.18
+        },
+        {
+          "word": " freaked",
+          "start": 13.18,
+          "end": 13.36
+        },
+        {
+          "word": " out",
+          "start": 13.36,
+          "end": 13.6
+        },
+        {
+          "word": " by",
+          "start": 13.6,
+          "end": 13.7
+        },
+        {
+          "word": " it's...",
+          "start": 13.7,
+          "end": 13.94
+        },
+        {
+          "word": " All",
+          "start": 15.66,
+          "end": 15.84
+        },
+        {
+          "word": " right,",
+          "start": 15.84,
+          "end": 16.06
+        },
+        {
+          "word": " fine.",
+          "start": 16.12,
+          "end": 16.42
+        },
+        {
+          "word": " I'm",
+          "start": 16.72,
+          "end": 16.94
+        },
+        {
+          "word": " freaked",
+          "start": 16.94,
+          "end": 17.2
+        },
+        {
+          "word": " out.",
+          "start": 17.2,
+          "end": 17.48
+        },
+        {
+          "word": " I'm",
+          "start": 17.6,
+          "end": 17.6
+        },
+        {
+          "word": " having",
+          "start": 17.6,
+          "end": 17.78
+        },
+        {
+          "word": " nightmares",
+          "start": 17.78,
+          "end": 18.14
+        },
+        {
+          "word": " that",
+          "start": 18.14,
+          "end": 18.3
+        },
+        {
+          "word": " I'm",
+          "start": 18.3,
+          "end": 18.42
+        },
+        {
+          "word": " being",
+          "start": 18.42,
+          "end": 18.66
+        },
+        {
+          "word": " chased",
+          "start": 18.66,
+          "end": 18.88
+        },
+        {
+          "word": " by",
+          "start": 18.88,
+          "end": 19.02
+        },
+        {
+          "word": " this",
+          "start": 19.02,
+          "end": 19.2
+        },
+        {
+          "word": " giant",
+          "start": 19.2,
+          "end": 19.56
+        },
+        {
+          "word": " robotic",
+          "start": 19.56,
+          "end": 20.16
+        },
+        {
+          "word": " glass.",
+          "start": 20.16,
+          "end": 20.4
+        },
+        {
+          "word": " Oh,",
+          "start": 20.4,
+          "end": 20.5
+        },
+        {
+          "word": " whatever,",
+          "start": 20.6,
+          "end": 20.98
+        },
+        {
+          "word": " Tom.",
+          "start": 21.24,
+          "end": 21.46
+        },
+        {
+          "word": " We're",
+          "start": 22.32,
+          "end": 22.72
+        },
+        {
+          "word": " done.",
+          "start": 22.72,
+          "end": 23.0
+        }
+      ],
+      "word_errors": 10,
+      "reference_words": 75,
+      "hypothesis_words": 76,
+      "wer": 0.1333,
+      "reference_scope": "official English subtitles; selected opening dialogue, not on-screen text"
+    }
+  ],
+  "comparison": {
+    "wer_small": 0.16,
+    "wer_medium": 0.1333,
+    "wer_reduction_percentage_points": 2.67,
+    "lower_wer_model": "medium",
+    "inference_ratio_medium_over_small": 3.726,
+    "production_default_changed": false,
+    "editorial_approval": false,
+    "scope": "One English film scene, not a Portuguese/GTA RP benchmark"
+  }
+}
