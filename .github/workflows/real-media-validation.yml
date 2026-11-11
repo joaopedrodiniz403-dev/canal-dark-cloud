@@ -10,6 +10,9 @@ on:
   pull_request:
     paths:
       - nuvem/real_validation.py
+      - nuvem/framing.py
+      - nuvem/framing_comparison.py
+      - tests/test_framing.py
       - nuvem/chopify_backend.py
       - requirements-cuts.txt
       - tests/test_audio_runtime.py
@@ -45,11 +48,15 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
           python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Testar contrato de audio e rejeicao de candidatos
-        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation -v
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing -v
       - name: Executar filme licenciado com fala real (sem aprovacao editorial)
         env:
           ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
         run: python -m nuvem.real_validation --download --asr-model "$ASR_MODEL" > work/validation-console.log 2>&1
+      - name: Comparar enquadramento em midia licenciada (sem aprovar conteudo)
+        run: |
+          python -m nuvem.framing_comparison > work/framing-console.log 2>&1
+          python -c "import json; r=json.load(open('work/framing-comparison/framing.json')); print(json.dumps({k:r[k] for k in ('status','baseline_coverage','dual_coverage','active_speaker_verified','editorial_approved')},indent=2))"
       - name: Entregar diagnostico com atribuicao e relatorios
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,5 +71,17 @@ jobs:
             work/real-validation/pipeline/project/transcript.json
             work/real-validation/pipeline/project/selection.json
             work/validation-console.log
+            work/framing-console.log
+            work/framing-comparison/framing.json
+            work/framing-comparison/ATTRIBUTION.txt
+            work/framing-comparison/baseline/*.mp4
+            work/framing-comparison/baseline/*.srt
+            work/framing-comparison/baseline/*.meta.json
+            work/framing-comparison/dual/*.mp4
+            work/framing-comparison/dual/*.srt
+            work/framing-comparison/dual/*.meta.json
+            work/framing-comparison/dual/ffmpeg.log
+            work/framing-comparison/dual/command-report.json
+            work/framing-comparison/analysis/*.json
           if-no-files-found: warn
           retention-days: 7

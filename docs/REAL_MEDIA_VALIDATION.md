@@ -42,3 +42,7 @@ Falta validar/corrigir o comportamento em português e GTA RP, rastreamento de f
 ## Comparação de ASR (10/11/2026)
 
 O campo opcional `asr_model` permite small/medium por fonte, mantendo small quando omitido. O comparador real mediu 16% versus 13,33% WER, com custo de CPU maior; isso não aprovou legendas, não alterou o padrão e não valida português. Veja [ASR_COMPARISON.md](ASR_COMPARISON.md). Na execução manual, `nuvem.real_validation --asr-model medium` permite inspecionar o render com o outro modelo; a marca de diagnóstico e todas as reprovações continuam obrigatórias.
+
+## Preservação de duas pessoas (11/11/2026)
+
+O diagnóstico agora compara o crop do maior rosto com uma composição experimental que mantém as duas faces e preserva o quadro durante lacunas de detecção. Na cena local, preservação geométrica de 63/122 passou a 122/122 detecções; isso não é identificação do falante nem validação de todos os frames. Veja [FRAMING_COMPARISON.md](FRAMING_COMPARISON.md). Os vídeos continuam marcados como não aprovados, sem ligação com a fila de produção.

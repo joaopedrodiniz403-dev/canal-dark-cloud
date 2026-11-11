@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-11-11T11:18:36.600096+00:00",
+  "scope": "FRAMING_DIAGNOSTIC_ONLY",
+  "production_eligible": false,
+  "editorial_approved": false,
+  "publication_enabled": false,
+  "attribution": "(CC) Blender Foundation | mango.blender.org \u2014 Tears of Steel \u2014 CC BY 3.0. Excerpt, crop, captions and audio normalization modified. No endorsement implied.",
+  "active_speaker_verified": false,
+  "production_default_changed": false,
+  "source_sha256": "5d5a925e2edf7a176d8cd9f602c58c2e1963d2c308e724d5feb2fd5d9f00a74e",
+  "duration": 20.88,
+  "detector": "yunet",
+  "detection_samples": 84,
+  "plan_status": "DUAL_FACE_DIAGNOSTIC",
+  "baseline_coverage": {
+    "detected_faces": 122,
+    "faces_95_percent_visible": 63,
+    "face_visibility_ratio": 0.5164,
+    "two_face_samples": 61,
+    "both_faces_visible_samples": 2,
+    "both_faces_visibility_ratio": 0.0328,
+    "scope": "Geometry of faces detected in source, not active speaker or ground truth",
+    "samples_without_detection": 23
+  },
+  "dual_coverage": {
+    "detected_faces": 122,
+    "faces_95_percent_visible": 122,
+    "face_visibility_ratio": 1.0,
+    "two_face_samples": 61,
+    "both_faces_visible_samples": 61,
+    "both_faces_visibility_ratio": 1.0,
+    "scope": "Geometry of faces detected in source, not active speaker or ground truth",
+    "samples_without_detection": 23
+  },
+  "outputs": [
+    {
+      "layout": "baseline",
+      "video": "baseline/largest-face-NOT-APPROVED.mp4",
+      "sha256": "f91df7d716192c7b97098dc7b2c8a892ac4e5c62df61e4ff902edaed188ad099",
+      "technical_qa": {
+        "passed": true,
+        "scope": "technical_only",
+        "editorial_approved": false,
+        "publication_approved": false,
+        "checks": {
+          "vertical_1080x1920": true,
+          "duration": true,
+          "audio_present": true,
+          "audio_audible": true,
+          "audio_not_clipped": true,
+          "captions_in_bounds": true,
+          "no_long_freeze": true,
+          "no_black_interval": true
+        },
+        "duration": 20.916016,
+        "audio_rms_dbfs": -13.81,
+        "clipped_sample_fraction": 0.00049752138442818,
+        "limitations": [
+          "ASR accuracy and meaning require listening",
+          "No semantic or legal approval",
+          "Freeze/black detection is a conservative technical gate"
+        ]
+      },
+      "observed_face_geometry_gate": false,
+      "editorial_approved": false
+    },
+    {
+      "layout": "dual",
+      "video": "dual/two-faces-NOT-APPROVED.mp4",
+      "sha256": "22629b1c7d2500d27a6da32204d7ac693be2f81563a8538ecb2dd936d58388dd",
+      "technical_qa": {
+        "passed": true,
+        "scope": "technical_only",
+        "editorial_approved": false,
+        "publication_approved": false,
+        "checks": {
+          "vertical_1080x1920": true,
+          "duration": true,
+          "audio_present": true,
+          "audio_audible": true,
+          "audio_not_clipped": true,
+          "captions_in_bounds": true,
+          "no_long_freeze": true,
+          "no_black_interval": true
+        },
+        "duration": 21.0,
+        "audio_rms_dbfs": -13.76,
+        "clipped_sample_fraction": 0.000500698892203701,
+        "limitations": [
+          "ASR accuracy and meaning require listening",
+          "No semantic or legal approval",
+          "Freeze/black detection is a conservative technical gate"
+        ]
+      },
+      "observed_face_geometry_gate": true,
+      "editorial_approved": false
+    }
+  ],
+  "status": "COMPARED_NO_EDITORIAL_APPROVAL",
+  "limitations": [
+    "Detected face boxes are not ground truth or active-speaker identity",
+    "Left/right association is spatial and may swap people who cross",
+    "Only one English film scene; no Portuguese/GTA RP validation",
+    "This experimental layout is not wired into production"
+  ],
+  "plan_summary": {
+    "ranges": [
+      [
+        2.0,
+        17.25
+      ]
+    ],
+    "panel_size": [
+      304,
+      270
+    ]
+  },
+  "crop_command_validation": {
+    "expected_commands": 2008,
+    "successful_replies": 2008,
+    "all_successful": true
+  }
+}
