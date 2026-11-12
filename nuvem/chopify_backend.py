@@ -8,6 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 from .engine import authorize, reject_test_source, save
+from .framing_stage import framing_mode, process_outputs
 
 REPOSITORY = 'https://github.com/mehbul/chopify'
 REVISION = 'd576927bf3b764733c97ac1ad324aa9957b0885d'
@@ -69,6 +70,7 @@ def empty_selection_rejection(output, returncode):
 def execute(source, root, upstream, output, max_clips=5):
     reject_test_source(source)
     model = asr_model(source.get('asr_model', 'small'))
+    mode = framing_mode(source.get('framing_mode','native'))
     path = authorize(source, root)
     # A supplied fixture transcript must not be used as evidence of a real cut.
     if source.get('transcript'):
@@ -78,7 +80,7 @@ def execute(source, root, upstream, output, max_clips=5):
     output.mkdir(parents=True, exist_ok=True)
     report = {'backend': REPOSITORY, 'revision': REVISION, 'source': str(path),
               'status': 'FAILED', 'editorial_approved': False, 'publication_approved': False,
-              'publication_enabled': False, 'rights': source['rights'], 'outputs': [], 'asr_model': model}
+              'publication_enabled': False, 'rights': source['rights'], 'outputs': [], 'asr_model': model,'framing_mode':mode}
     args = command(upstream, path, output/'project', output/'exports', max_clips, model)
     report['command'] = args
     try:
@@ -87,14 +89,19 @@ def execute(source, root, upstream, output, max_clips=5):
                                        check=False, timeout=3000)
         rejection = empty_selection_rejection(output, completed.returncode)
         if rejection is not None:
-            report.update(status='NO_CANDIDATES', reason='EDITORIAL_THRESHOLD', selection=rejection)
+            report.update(status='NO_CANDIDATES', reason='EDITORIAL_THRESHOLD', selection=rejection,
+                          framing={'status':'NOT_RUN_NO_CANDIDATES'})
             return report
         completed.check_returncode()
         outputs = sorted((output/'exports').glob('*.mp4'))
         report['outputs'] = [str(p.relative_to(output)) for p in outputs]
         report['status'] = 'AWAITING_TECHNICAL_AND_EDITORIAL_REVIEW' if outputs else 'NO_CANDIDATES'
+        if mode=='preserve_two_faces' and report['outputs']:
+            report['outputs'],report['framing']=process_outputs(source,path,output,upstream,report['outputs'])
+            if not report['outputs']:report['status']='FRAMING_REJECTED'
         return report
     except Exception as e:
+        report.update(status='FAILED',outputs=[])
         report['reason'] = str(e)
         raise
     finally:

@@ -1,6 +1,6 @@
 # Enquadramento de duas pessoas — diagnóstico experimental
 
-O recorte do maior rosto do Chopify pode excluir a outra pessoa durante uma conversa. Esta etapa compara esse recorte com uma composição de dois painéis, usando a mesma cena CC BY de Tears of Steel, áudio, remoção de pausas e transcrição. **Não identifica o falante ativo e não está conectado à produção.**
+O recorte do maior rosto do Chopify pode excluir a outra pessoa durante uma conversa. Esta etapa compara esse recorte com uma composição de dois painéis, usando a mesma cena CC BY de Tears of Steel, áudio, remoção de pausas e transcrição. **Não identifica o falante ativo.** A integração opcional após seleção está descrita em [FRAMING_INTEGRATION.md](FRAMING_INTEGRATION.md); permanece em PR, sem ativação na branch padrão.
 
 ## Implementação
 

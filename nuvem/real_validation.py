@@ -53,7 +53,7 @@ def obtain_movie(path):
         temporary.unlink(missing_ok=True)
 
 
-def validate(movie,upstream,output,model='small'):
+def validate(movie,upstream,output,model='small',framing='native'):
     model=checked_model(model)
     if digest(movie)!=MOVIE_SHA: raise ValueError('Unverified validation movie')
     verify_checkout(upstream)
@@ -71,12 +71,14 @@ def validate(movie,upstream,output,model='small'):
         # Always derive from the verified original; never trust an edited cached excerpt.
         run(['ffmpeg','-y','-hide_banner','-loglevel','error','-ss','22','-i',movie,'-t','24',
              '-c:v','libx264','-preset','veryfast','-crf','18','-threads','2','-c:a','aac',scene])
-        source={'path':scene.name,'asr_model':model,'rights':{'verified':True,'kind':'licensed','holder':'Blender Foundation',
+        source={'path':scene.name,'asr_model':model,'framing_mode':framing,'rights':{'verified':True,'kind':'licensed','holder':'Blender Foundation',
                 'reference':LICENSE_URL,'verified_by':'Primary film sharing/download pages checked by agent',
                 'verified_at':'2026-11-09'}}
         pipeline=execute(source,media,upstream,output/'pipeline')
         report['automatic_pipeline_status']=pipeline['status']
         report['automatic_output_count']=len(pipeline['outputs'])
+        report['framing_mode']=framing
+        report['automatic_framing']=pipeline.get('framing',{'status':'NOT_REQUESTED'})
         project=output/'pipeline/project'
         transcription=json.loads((project/'transcript.json').read_text())
         report['asr']={'model':transcription['model'],'language':transcription['language'],
@@ -141,10 +143,11 @@ def main():
     p.add_argument('--output',type=Path,default=Path('work/real-validation'))
     p.add_argument('--download',action='store_true')
     p.add_argument('--asr-model',choices=ASR_MODELS,default='small')
+    p.add_argument('--framing-mode',choices=('native','preserve_two_faces'),default='native')
     args=p.parse_args()
     if args.download: obtain_movie(args.movie)
     if not args.movie.exists(): p.error('Movie missing; use --download for the fixed licensed source')
-    report=validate(args.movie.resolve(),args.upstream.resolve(),args.output.resolve(),model=args.asr_model)
+    report=validate(args.movie.resolve(),args.upstream.resolve(),args.output.resolve(),model=args.asr_model,framing=args.framing_mode)
     print(json.dumps(report,ensure_ascii=False,indent=2))
 
 
