@@ -1,4 +1,5 @@
 """Compare existing largest-face crop with a two-face diagnostic on licensed media."""
+from .caption_audit import audit as caption_audit
 import argparse
 import bisect
 import json
@@ -85,13 +86,14 @@ def compare(validation,upstream,output):
             save(video.with_suffix('.meta.json'),{'attribution':ATTRIBUTION,'license':LICENSE,'production_eligible':False,'editorial_approved':False,'publication_approved':False})
             report['outputs'].append({'layout':name,'video':str(video.relative_to(output)),'sha256':digest(video),
                                       'technical_qa':qa(video,words,duration),
+                                      'caption_audit':caption_audit(video.with_suffix('.srt').read_text(encoding='utf-8-sig'),float(probe(video)['format']['duration']),words),
                                       'observed_face_geometry_gate':metrics['face_visibility_ratio'] is not None and metrics['face_visibility_ratio']>=.95,
                                       'editorial_approved':False})
         report['status']='COMPARED_NO_EDITORIAL_APPROVAL'
         report['limitations']=['Detected face boxes are not ground truth or active-speaker identity',
                               'Left/right association is spatial and may swap people who cross',
                               'Only one English film scene; no Portuguese/GTA RP validation',
-                              'This experimental layout is not wired into production']
+                              'Optional layout requires selected real content and human review; main default unchanged']
     except Exception as error:
         report.update(status='FAILED',reason=str(error));raise
     finally:

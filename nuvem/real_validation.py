@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from .chopify_backend import execute, REVISION, verify_checkout, asr_model as checked_model, ASR_MODELS
 from .engine import digest, probe, qa, run, save
+from .caption_audit import audit as caption_audit
 
 MOVIE_URL = 'https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov'
 MOVIE_SHA = 'efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f'
@@ -122,6 +123,7 @@ def validate(movie,upstream,output,model='small',framing='native'):
         save(marked.with_suffix('.meta.json'),{'title':'Tears of Steel - diagnostic not approved','attribution':ATTRIBUTION,'license_url':LICENSE,'production_eligible':False,'editorial_approved':False,'publication_approved':False})
         report['reference_render'].update(video=str(marked.relative_to(output)),sha256=digest(marked),
                                          qa=qa(marked,mapped,duration),keep_ranges=keeps)
+        report['caption_audit']=caption_audit(marked.with_suffix('.srt').read_text(encoding='utf-8-sig'),float(probe(marked)['format']['duration']),mapped)
         report['dependencies']={name:importlib.metadata.version(name) for name in ('av','faster-whisper','ctranslate2','opencv-python','numpy')}
         report['status']='DIAGNOSTIC_COMPLETED_NO_EDITORIAL_APPROVAL'
         report['limitations']=['English film, not Portuguese GTA RP footage',

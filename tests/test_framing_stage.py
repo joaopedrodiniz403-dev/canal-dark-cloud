@@ -42,7 +42,7 @@ class FramingStageTests(unittest.TestCase):
         self.selected[0]['end']=21;self.write()
         with self.assertRaisesRegex(ValueError,'SELECTION_MISMATCH'):selected_segment(self.video,self.source,self.project)
     def test_native_default_never_calls_postprocessor(self):
-        with patch('nuvem.chopify_backend.verify_checkout'),patch('nuvem.chopify_backend.subprocess.run',return_value=subprocess.CompletedProcess([],0)),patch('nuvem.chopify_backend.process_outputs') as process:
+        with patch('nuvem.chopify_backend.audit_outputs',side_effect=lambda source,project,upstream,output,outputs:(outputs,{'scope':'unit double'})), patch('nuvem.chopify_backend.verify_checkout'),patch('nuvem.chopify_backend.subprocess.run',return_value=subprocess.CompletedProcess([],0)),patch('nuvem.chopify_backend.process_outputs') as process:
             result=execute(self.record,self.p,self.p,self.out)
         process.assert_not_called();self.assertEqual(result['outputs'],['exports/native.mp4'])
     def test_invalid_mode_rejected(self):
@@ -71,7 +71,7 @@ class FramingStageTests(unittest.TestCase):
             process_outputs(self.record,self.source,self.out,self.p,['../source.mp4'])
     def test_optin_empty_native_result_never_calls_postprocessor(self):
         self.video.unlink();self.record['framing_mode']='preserve_two_faces'
-        with patch('nuvem.chopify_backend.verify_checkout'),patch('nuvem.chopify_backend.subprocess.run',return_value=subprocess.CompletedProcess([],0)),patch('nuvem.chopify_backend.process_outputs') as process:
+        with patch('nuvem.chopify_backend.audit_outputs',side_effect=lambda source,project,upstream,output,outputs:(outputs,{'scope':'unit double'})), patch('nuvem.chopify_backend.verify_checkout'),patch('nuvem.chopify_backend.subprocess.run',return_value=subprocess.CompletedProcess([],0)),patch('nuvem.chopify_backend.process_outputs') as process:
             result=execute(self.record,self.p,self.p,self.out)
         process.assert_not_called();self.assertEqual(result['outputs'],[])
     def run_stage_double(self,quality=True,uncertain=False,render_error=False):

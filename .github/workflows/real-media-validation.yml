@@ -10,6 +10,8 @@ on:
   pull_request:
     paths:
       - nuvem/real_validation.py
+      - nuvem/caption_audit.py
+      - tests/test_caption_audit.py
       - nuvem/framing_stage.py
       - tests/test_framing_stage.py
       - nuvem/framing.py
@@ -50,11 +52,13 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
           python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Testar contrato de audio e rejeicao de candidatos
-        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage -v
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit -v
       - name: Executar filme licenciado com fala real (sem aprovacao editorial)
         env:
           ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
         run: python -m nuvem.real_validation --download --asr-model "$ASR_MODEL" --framing-mode preserve_two_faces > work/validation-console.log 2>&1
+      - name: Mostrar auditoria de legendas reais sem aprovar conteudo
+        run: python -c "import json; r=json.load(open('work/real-validation/validation.json')); print(json.dumps(r['caption_audit'],indent=2))"
       - name: Comparar enquadramento em midia licenciada (sem aprovar conteudo)
         run: |
           python -m nuvem.framing_comparison > work/framing-console.log 2>&1

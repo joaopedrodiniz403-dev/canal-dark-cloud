@@ -73,6 +73,7 @@ def cycle(root, manifest, upstream, output, state, runner=execute, inspector=qa)
                 state['sources'][source_hash] = {'day': today, 'revision': REVISION, 'examined': examined}
             entry.update(status='PROCESSED' if result['outputs'] else result.get('status','NO_CANDIDATES'))
             if result.get('framing') is not None:entry['framing']=result['framing']
+            if result.get('captions') is not None:entry['captions']=result['captions']
         except Exception as e:
             entry.update(status='FAILED', reason=str(e))
     report['status'] = 'REVIEW_REQUIRED' if report['ready_for_review'] else 'BLOCKED_NO_AUTHORIZED_MEDIA' if not manifest.get('sources') else 'NO_APPROVED_OUTPUT'

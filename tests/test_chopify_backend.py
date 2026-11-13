@@ -39,7 +39,7 @@ class ChopifyAdapterTests(unittest.TestCase):
             source = {'path': 'source.mp4', 'rights': {'verified': True, 'kind': 'owned',
                 'reference': 'test', 'holder': 'test', 'verified_by': 'test', 'verified_at': '2026-11-06'}}
             source['asr_model']='medium'
-            with patch('nuvem.chopify_backend.verify_checkout'), patch('nuvem.chopify_backend.subprocess.run', return_value=subprocess.CompletedProcess([], 0)) as backend:
+            with patch('nuvem.chopify_backend.audit_outputs',side_effect=lambda source,project,upstream,output,outputs:(outputs,{'scope':'unit double'})), patch('nuvem.chopify_backend.verify_checkout'), patch('nuvem.chopify_backend.subprocess.run', return_value=subprocess.CompletedProcess([], 0)) as backend:
                 result = execute(source, p, p, p/'output', max_clips=2)
             self.assertEqual(result['outputs'], ['exports/real-output.mp4'])
             self.assertFalse(result['editorial_approved'])

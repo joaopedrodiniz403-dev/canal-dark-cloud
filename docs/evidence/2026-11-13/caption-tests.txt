@@ -1,0 +1,21 @@
+test_accent_change_not_hidden (tests.test_caption_audit.CaptionAuditTests.test_accent_change_not_hidden) ... ok
+test_bom_and_crlf (tests.test_caption_audit.CaptionAuditTests.test_bom_and_crlf) ... ok
+test_invalid_reference_rejected (tests.test_caption_audit.CaptionAuditTests.test_invalid_reference_rejected) ... ok
+test_long_line_and_three_lines_rejected (tests.test_caption_audit.CaptionAuditTests.test_long_line_and_three_lines_rejected) ... ok
+test_malformed_block_never_silently_ignored (tests.test_caption_audit.CaptionAuditTests.test_malformed_block_never_silently_ignored) ... ok
+test_markup_rejected (tests.test_caption_audit.CaptionAuditTests.test_markup_rejected) ... ok
+test_missing_word_rejected (tests.test_caption_audit.CaptionAuditTests.test_missing_word_rejected) ... ok
+test_negative_or_zero_duration_rejected (tests.test_caption_audit.CaptionAuditTests.test_negative_or_zero_duration_rejected) ... ok
+test_no_reference_is_not_speech_verification (tests.test_caption_audit.CaptionAuditTests.test_no_reference_is_not_speech_verification) ... ok
+test_overlapping_cues_rejected (tests.test_caption_audit.CaptionAuditTests.test_overlapping_cues_rejected) ... ok
+test_portuguese_unicode_case_and_punctuation_preserved (tests.test_caption_audit.CaptionAuditTests.test_portuguese_unicode_case_and_punctuation_preserved) ... ok
+test_rapid_caption_rejected (tests.test_caption_audit.CaptionAuditTests.test_rapid_caption_rejected) ... ok
+test_shifted_caption_rejected_even_when_text_matches (tests.test_caption_audit.CaptionAuditTests.test_shifted_caption_rejected_even_when_text_matches) ... ok
+test_too_brief_caption_rejected (tests.test_caption_audit.CaptionAuditTests.test_too_brief_caption_rejected) ... ok
+test_backend_does_not_return_caption_rejected_native_exports (tests.test_caption_audit.CaptionPipelineTests.test_backend_does_not_return_caption_rejected_native_exports) ... ok
+test_rejected_export_does_not_enter_queue (tests.test_caption_audit.CaptionPipelineTests.test_rejected_export_does_not_enter_queue) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.067s
+
+OK

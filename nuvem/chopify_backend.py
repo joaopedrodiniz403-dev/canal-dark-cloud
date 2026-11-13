@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from .engine import authorize, reject_test_source, save
 from .framing_stage import framing_mode, process_outputs
+from .caption_audit import audit_outputs
 
 REPOSITORY = 'https://github.com/mehbul/chopify'
 REVISION = 'd576927bf3b764733c97ac1ad324aa9957b0885d'
@@ -99,6 +100,9 @@ def execute(source, root, upstream, output, max_clips=5):
         if mode=='preserve_two_faces' and report['outputs']:
             report['outputs'],report['framing']=process_outputs(source,path,output,upstream,report['outputs'])
             if not report['outputs']:report['status']='FRAMING_REJECTED'
+        if report['outputs']:
+            report['outputs'],report['captions']=audit_outputs(path,output/'project',upstream,output,report['outputs'])
+            if not report['outputs']:report['status']='CAPTIONS_REJECTED'
         return report
     except Exception as e:
         report.update(status='FAILED',outputs=[])
