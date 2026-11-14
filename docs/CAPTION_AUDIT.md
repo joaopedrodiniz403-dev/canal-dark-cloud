@@ -18,7 +18,7 @@ Os limites são uma política conservadora inicial do projeto, não uma mediçã
 
 `caption_report.json` contém políticas, número das cues com problema, medidas, correspondência de referência e hashes do MP4, SRT e transcrição. Nenhuma aprovação editorial/publicação é atribuída. A fila continua sendo exclusivamente de revisão humana.
 
-Não reescrevemos somente o SRT: isso criaria divergência com a legenda queimada no vídeo. Corrigir velocidade exigirá adaptar agrupamento/duração e renderizar novamente o ASS/SRT em conjunto, com fidelidade à fala. O novo gate bloqueia os problemas conhecidos em vez de esconder o resultado.
+Não reescrevemos somente o SRT: isso criaria divergência com a legenda queimada no vídeo. A variante opcional de duas faces agora adapta agrupamento e renderiza ASS/SRT em conjunto; detalhes em CAPTION_REFLOW.md. O render nativo continua sem essa correção. O novo gate bloqueia os problemas conhecidos em vez de esconder o resultado.
 
 ## Evidência real e reprodução
 

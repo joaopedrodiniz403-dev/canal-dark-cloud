@@ -84,12 +84,12 @@ def analyze(source,work,upstream):
     import sys
     import cv2
     sys.path.insert(0,str(upstream))
-    import render_clips
     data=probe(source);stream=next(s for s in data['streams'] if s['codec_type']=='video')
     width,height=stream['width'],stream['height'];work.mkdir(parents=True,exist_ok=True)
     reduced=work/'analysis.mp4'
     run(['ffmpeg','-y','-hide_banner','-loglevel','error','-i',source,'-vf','fps=4,scale=960:-2',
          '-an','-c:v','libx264','-preset','ultrafast','-threads','2',reduced])
+    import render_clips
     kind,detector=render_clips._make_detector(work)
     cap=cv2.VideoCapture(str(reduced));dw,dh=int(cap.get(3)),int(cap.get(4))
     if kind=='yunet':detector.setInputSize((dw,dh))
@@ -123,8 +123,6 @@ def render_dual(source,words,plan,width,height,duration,output,upstream):
     if plan['status']!='DUAL_FACE_DIAGNOSTIC':raise ValueError('No stable dual-face plan')
     import sys
     sys.path.insert(0,str(upstream))
-    import render_clips
-    from captions import write_srt
     output.mkdir(parents=True,exist_ok=True)
     # Interpolate crop motion at video rate, instead of jumping at detector sample rate.
     commands=[]
@@ -136,8 +134,8 @@ def render_dual(source,words,plan,width,height,duration,output,upstream):
         for i,crop in enumerate(crops):
             commands += [f'{t:.5f} crop@p{i} x {crop[0]};',f'{t:.5f} crop@p{i} y {crop[1]};']
     (output/'crops.cmd').write_text('\n'.join(commands)+'\n')
-    render_clips.build_ass(words,0,duration,output/'captions.ass',1080,1920,64,900,'bold',
-                           caption={'words_per_cue':3,'position':'center','font':'DejaVu Sans','font_size':36})
+    from .caption_reflow import write as write_readable
+    write_readable(words,duration,output/'captions.ass',output/'dual-face-NOT-APPROVED.srt')
     expression='+'.join(f'between(T,{a:.4f},{b:.4f})' for a,b in plan['ranges'])
     cw,ch=plan['panel_size'];first=plan['tracks'][0]['crops']
     filters=["[0:v]sendcmd=f=crops.cmd,split=4[l][r][b][f]",
@@ -159,5 +157,4 @@ def render_dual(source,words,plan,width,height,duration,output,upstream):
     (output/'ffmpeg.log').write_bytes(process.stderr)
     process.check_returncode()
     save(output/'command-report.json',validate_crop_replies(process.stderr.decode(errors='replace'),len(commands)))
-    write_srt(words,0,duration,video.with_suffix('.srt'),group_size=3)
     return video

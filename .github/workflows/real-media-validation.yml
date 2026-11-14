@@ -10,6 +10,8 @@ on:
   pull_request:
     paths:
       - nuvem/real_validation.py
+      - nuvem/caption_reflow.py
+      - tests/test_caption_reflow.py
       - nuvem/caption_audit.py
       - tests/test_caption_audit.py
       - nuvem/framing_stage.py
@@ -52,7 +54,7 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
           python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Testar contrato de audio e rejeicao de candidatos
-        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit -v
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit tests.test_caption_reflow -v
       - name: Executar filme licenciado com fala real (sem aprovacao editorial)
         env:
           ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
@@ -62,7 +64,7 @@ jobs:
       - name: Comparar enquadramento em midia licenciada (sem aprovar conteudo)
         run: |
           python -m nuvem.framing_comparison > work/framing-console.log 2>&1
-          python -c "import json; r=json.load(open('work/framing-comparison/framing.json')); print(json.dumps({k:r[k] for k in ('status','baseline_coverage','dual_coverage','active_speaker_verified','editorial_approved')},indent=2))"
+          python -c "import json; r=json.load(open('work/framing-comparison/framing.json')); print(json.dumps({k:r[k] for k in ('status','baseline_coverage','dual_coverage','active_speaker_verified','editorial_approved','outputs')},indent=2))"
       - name: Entregar diagnostico com atribuicao e relatorios
         if: always()
         uses: actions/upload-artifact@v4
@@ -86,6 +88,8 @@ jobs:
             work/framing-comparison/baseline/*.meta.json
             work/framing-comparison/dual/*.mp4
             work/framing-comparison/dual/*.srt
+            work/framing-comparison/dual/captions.ass
+            work/framing-comparison/dual/captions.plan.json
             work/framing-comparison/dual/*.meta.json
             work/framing-comparison/dual/ffmpeg.log
             work/framing-comparison/dual/command-report.json
