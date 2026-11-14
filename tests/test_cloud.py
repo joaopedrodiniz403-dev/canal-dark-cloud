@@ -15,6 +15,17 @@ def source_file(root, filename):
 
 
 class CloudCycleTests(unittest.TestCase):
+    def test_framing_rejection_preserved_without_budget_consumption(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);source=source_file(p,'input.mp4');state=empty_state()
+            def backend(*args,**kwargs):
+                return {'outputs':[],'status':'FRAMING_REJECTED','framing':{'status':'FRAMING_REJECTED'}}
+            r=cycle(p,{'sources':[source]},p,p/'out',state,runner=backend)
+            self.assertEqual(r['sources'][0]['status'],'FRAMING_REJECTED')
+            self.assertEqual(r['sources'][0]['framing']['status'],'FRAMING_REJECTED')
+            self.assertEqual(r['remaining_daily_budget'],5);self.assertEqual(r['items'],[])
+            self.assertEqual(state['sources'],{});self.assertEqual(state['videos'],[])
+
     def test_no_media_does_not_call_backend(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)

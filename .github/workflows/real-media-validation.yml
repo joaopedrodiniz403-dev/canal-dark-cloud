@@ -1,0 +1,98 @@
+name: Nuvem Escura - diagnostico com fala real CC BY
+on:
+  workflow_dispatch:
+    inputs:
+      asr_model:
+        description: Modelo ASR para o diagnostico (nao altera producao)
+        type: choice
+        options: [small, medium]
+        default: small
+  pull_request:
+    paths:
+      - nuvem/real_validation.py
+      - nuvem/caption_reflow.py
+      - tests/test_caption_reflow.py
+      - nuvem/caption_audit.py
+      - tests/test_caption_audit.py
+      - nuvem/framing_stage.py
+      - tests/test_framing_stage.py
+      - nuvem/framing.py
+      - nuvem/framing_comparison.py
+      - tests/test_framing.py
+      - nuvem/chopify_backend.py
+      - requirements-cuts.txt
+      - tests/test_audio_runtime.py
+      - tests/test_selection_rejection.py
+      - .github/workflows/real-media-validation.yml
+permissions:
+  contents: read
+concurrency:
+  group: nuvem-real-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_HOME: ${{ github.workspace }}/work/hf-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: mehbul/chopify
+          ref: d576927bf3b764733c97ac1ad324aa9957b0885d
+          path: work/chopify
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar somente o backend de validacao
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
+      - name: Testar contrato de audio e rejeicao de candidatos
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit tests.test_caption_reflow -v
+      - name: Executar filme licenciado com fala real (sem aprovacao editorial)
+        env:
+          ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
+        run: python -m nuvem.real_validation --download --asr-model "$ASR_MODEL" --framing-mode preserve_two_faces > work/validation-console.log 2>&1
+      - name: Mostrar auditoria de legendas reais sem aprovar conteudo
+        run: python -c "import json; r=json.load(open('work/real-validation/validation.json')); print(json.dumps(r['caption_audit'],indent=2))"
+      - name: Comparar enquadramento em midia licenciada (sem aprovar conteudo)
+        run: |
+          python -m nuvem.framing_comparison > work/framing-console.log 2>&1
+          python -c "import json; r=json.load(open('work/framing-comparison/framing.json')); print(json.dumps({k:r[k] for k in ('status','baseline_coverage','dual_coverage','active_speaker_verified','editorial_approved','outputs')},indent=2))"
+      - name: Entregar diagnostico com atribuicao e relatorios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostico-real-NAO-APROVADO-${{ github.run_number }}
+          path: |
+            work/real-validation/validation.json
+            work/real-validation/ATTRIBUTION.txt
+            work/real-validation/README.md
+            work/real-validation/reference/
+            work/real-validation/pipeline/upstream_report.json
+            work/real-validation/pipeline/pipeline.log
+            work/real-validation/pipeline/project/transcript.json
+            work/real-validation/pipeline/project/selection.json
+            work/validation-console.log
+            work/framing-console.log
+            work/framing-comparison/framing.json
+            work/framing-comparison/ATTRIBUTION.txt
+            work/framing-comparison/baseline/*.mp4
+            work/framing-comparison/baseline/*.srt
+            work/framing-comparison/baseline/*.meta.json
+            work/framing-comparison/dual/*.mp4
+            work/framing-comparison/dual/*.srt
+            work/framing-comparison/dual/captions.ass
+            work/framing-comparison/dual/captions.plan.json
+            work/framing-comparison/dual/*.meta.json
+            work/framing-comparison/dual/ffmpeg.log
+            work/framing-comparison/dual/command-report.json
+            work/framing-comparison/analysis/*.json
+          if-no-files-found: warn
+          retention-days: 7
