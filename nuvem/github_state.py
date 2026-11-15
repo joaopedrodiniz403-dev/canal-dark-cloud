@@ -15,12 +15,14 @@ FILE = '.nuvem/state.json'
 
 
 def empty_state():
-    return {'schema': 1, 'sources': {}, 'days': {}, 'videos': []}
+    return {'schema': 1, 'sources': {}, 'days': {}, 'videos': [], 'reviews': {}}
 
 
 def validate(state):
     if state.get('schema') != 1 or not isinstance(state.get('sources'), dict) or not isinstance(state.get('days'), dict) or not isinstance(state.get('videos'), list):
         raise ValueError('Invalid durable state; refusing to reset history')
+    from .review_ledger import validate_reviews
+    validate_reviews(state.get('reviews',{}),state['videos'])
     return state
 
 

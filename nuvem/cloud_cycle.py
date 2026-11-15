@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 from .chopify_backend import execute, REVISION
 from .engine import authorize, reject_test_source, digest, probe, qa, save
 from .github_state import validate
+from .review_ledger import enqueue
 
 
 def caption_cues(path):
@@ -61,14 +62,15 @@ def cycle(root, manifest, upstream, output, state, runner=execute, inspector=qa)
                 item = {'video': str(video.relative_to(output.resolve())), 'video_sha256': video_hash,
                         'quality': quality, 'editorial_approved': False, 'publication_approved': False,
                         'status': 'PENDING_HUMAN_REVIEW' if quality['passed'] else 'REJECTED_TECHNICAL_QA'}
-                report['items'].append(item)
-                examined += 1
                 if quality['passed']:
+                    item['review_id']=enqueue(state,video,video.with_suffix('.srt'),source_hash,REVISION,report['generated_at'])
                     accepted += 1
                     report['ready_for_review'] += 1
                     remaining -= 1
                     state['days'][today] = int(state['days'].get(today, 0)) + 1
                     state['videos'].append(video_hash)
+                report['items'].append(item)
+                examined += 1
             if accepted:
                 state['sources'][source_hash] = {'day': today, 'revision': REVISION, 'examined': examined}
             entry.update(status='PROCESSED' if result['outputs'] else result.get('status','NO_CANDIDATES'))
@@ -76,11 +78,13 @@ def cycle(root, manifest, upstream, output, state, runner=execute, inspector=qa)
             if result.get('captions') is not None:entry['captions']=result['captions']
         except Exception as e:
             entry.update(status='FAILED', reason=str(e))
-    report['status'] = 'REVIEW_REQUIRED' if report['ready_for_review'] else 'BLOCKED_NO_AUTHORIZED_MEDIA' if not manifest.get('sources') else 'NO_APPROVED_OUTPUT'
+    report['durable_pending_reviews']=sum(x['status']=='PENDING_HUMAN_REVIEW' for x in state.get('reviews',{}).values())
+    report['status'] = 'REVIEW_REQUIRED' if report['ready_for_review'] else 'PENDING_DURABLE_REVIEWS' if report['durable_pending_reviews'] else 'BLOCKED_NO_AUTHORIZED_MEDIA' if not manifest.get('sources') else 'NO_APPROVED_OUTPUT'
     report['remaining_daily_budget'] = remaining
     save(output/'review_queue.json', report)
     (output/'REVIEW.md').write_text('# Nuvem Escura — revisão\n\nNenhum conteúdo aprovado editorialmente ou publicado.\n\n' +
         '\n'.join(f"- [{x['status']}]({x['video']})" for x in report['items']) +
+        (f"\n\nItens pendentes no histórico: {report['durable_pending_reviews']}. Arquivos de ciclos anteriores podem exigir recuperação em armazenamento autorizado." if report['durable_pending_reviews'] else '') +
         ('\n\nBLOQUEADO: nenhuma mídia autorizada cadastrada.' if not manifest.get('sources') else ''), encoding='utf-8')
     return report
 

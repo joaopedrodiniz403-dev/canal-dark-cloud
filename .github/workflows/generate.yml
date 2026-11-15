@@ -39,3 +39,21 @@ jobs:
           python work/chopify/chopify.py --help
       - name: Verificar decodificacao real usada pelo ASR (sem modelo)
         run: python -m unittest tests.test_audio_runtime -v
+
+  review-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: nuvem-state
+          path: work/durable-state
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validar historico real em modo somente leitura
+        run: python -m nuvem.review_ledger list --state work/durable-state/.nuvem/state.json

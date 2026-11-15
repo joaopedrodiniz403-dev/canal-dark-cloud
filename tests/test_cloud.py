@@ -52,8 +52,12 @@ class CloudCycleTests(unittest.TestCase):
                 inspector=lambda *args: {'passed': True, 'scope': 'technical_only'}
                 r=cycle(p, {'sources': [source]}, p, p/'first', state, backend, inspector)
                 self.assertEqual(r['ready_for_review'],5)
+                self.assertEqual(len(state['reviews']),5)
+                state=json.loads(json.dumps(state))  # new runner restores durable JSON
                 again=cycle(p, {'sources': [source]}, p, p/'again', state, backend, inspector)
                 self.assertEqual(again['ready_for_review'],0)
+                self.assertEqual(again['durable_pending_reviews'],5)
+                self.assertEqual(again['status'],'PENDING_DURABLE_REVIEWS')
                 self.assertEqual(calls,[5])
                 self.assertTrue(all(not x['publication_approved'] for x in r['items']))
                 # Another day resets budget but must still skip a processed source.
