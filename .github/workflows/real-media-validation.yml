@@ -9,6 +9,8 @@ on:
         default: small
   pull_request:
     paths:
+      - nuvem/portuguese_validation.py
+      - tests/test_portuguese_validation.py
       - nuvem/real_validation.py
       - nuvem/caption_reflow.py
       - tests/test_caption_reflow.py
@@ -54,7 +56,7 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
           python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Testar contrato de audio e rejeicao de candidatos
-        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit tests.test_caption_reflow -v
+        run: python -m unittest tests.test_audio_runtime tests.test_selection_rejection tests.test_real_validation tests.test_framing tests.test_framing_stage tests.test_caption_audit tests.test_caption_reflow tests.test_portuguese_validation -v
       - name: Executar filme licenciado com fala real (sem aprovacao editorial)
         env:
           ASR_MODEL: ${{ github.event.inputs.asr_model || 'small' }}
@@ -65,12 +67,25 @@ jobs:
         run: |
           python -m nuvem.framing_comparison > work/framing-console.log 2>&1
           python -c "import json; r=json.load(open('work/framing-comparison/framing.json')); print(json.dumps({k:r[k] for k in ('status','baseline_coverage','dual_coverage','active_speaker_verified','editorial_approved','outputs')},indent=2))"
+      - name: Validar fala real em portugues CC BY-SA sem aprovar canal
+        run: |
+          python -m nuvem.portuguese_validation --download > work/pt-validation-console.log 2>&1
+          python -c "import json; r=json.load(open('work/portuguese-validation/validation.json')); print(json.dumps({k:r.get(k) for k in ('status','asr','selection','reference_render','caption_reflow_feasibility','editorial_approved')},indent=2))"
       - name: Entregar diagnostico com atribuicao e relatorios
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: diagnostico-real-NAO-APROVADO-${{ github.run_number }}
           path: |
+            work/portuguese-validation/validation.json
+            work/portuguese-validation/ATTRIBUTION.txt
+            work/portuguese-validation/README.md
+            work/portuguese-validation/reference/
+            work/portuguese-validation/pipeline/upstream_report.json
+            work/portuguese-validation/pipeline/project/transcript.json
+            work/portuguese-validation/pipeline/project/selection.json
+            work/portuguese-validation/pipeline/pipeline.log
+            work/pt-validation-console.log
             work/real-validation/validation.json
             work/real-validation/ATTRIBUTION.txt
             work/real-validation/README.md
