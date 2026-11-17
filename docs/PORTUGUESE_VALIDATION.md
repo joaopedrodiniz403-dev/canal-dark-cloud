@@ -32,3 +32,9 @@ Não há transcrição independente conferida por escuta: WER fica null, accurac
 Evidências em docs/evidence/2026-11-17/. Os números da nuvem ficam separados na descrição do PR porque ASR/tempos podem variar. O workflow real entrega MP4 marcado, atribuição CC BY-SA, SRT, transcrição, seleção, tracking e auditoria; não distribui o original completo ou modelos.
 
 É uma entrevista cultural, não gameplay/GTA RP nem avaliação editorial profissional. Permanecem necessárias revisão humana da fala/contexto e validação no cenário-alvo. A pontuação heurística não é um avaliador editorial por IA validado. Cadastro e fila do canal continuam sem entradas novas.
+
+## Limite de obtenção observado na nuvem
+
+O primeiro run de 17/11 (44073056685) recebeu HTTP 429 do Wikimedia no runner GitHub antes do ASR português. O êxito local não foi apresentado como execução na nuvem. O cliente identifica o projeto conforme a política oficial de User-Agent e respeita Retry-After: no máximo uma repetição, somente se o servidor indicar espera <=30 s. Sem indicação ou com espera maior, interrompe e grava BLOCKED_SOURCE_RATE_LIMIT, asr_executed=false e render_executed=false; o job continua com saída não zero. Não há espelhamento arbitrário, mudança de rota ou fallback de conteúdo.
+
+Política consultada: https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy . Se o bloqueio persistir, o runner precisará obter o mesmo arquivo verificado por armazenamento autorizado; esse acesso continua pendente.

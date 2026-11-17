@@ -71,6 +71,9 @@ jobs:
         run: |
           python -m nuvem.portuguese_validation --download > work/pt-validation-console.log 2>&1
           python -c "import json; r=json.load(open('work/portuguese-validation/validation.json')); print(json.dumps({k:r.get(k) for k in ('status','asr','selection','reference_render','caption_reflow_feasibility','editorial_approved')},indent=2))"
+      - name: Preservar resumo portugues mesmo em bloqueio de origem
+        if: always()
+        run: python -c "import json,pathlib; p=pathlib.Path('work/portuguese-validation/validation.json'); r=json.loads(p.read_text()) if p.exists() else {'status':'NOT_EXECUTED'}; print(json.dumps({k:r.get(k) for k in ('status','asr_executed','render_executed','asr','selection','editorial_approved')},indent=2))"
       - name: Entregar diagnostico com atribuicao e relatorios
         if: always()
         uses: actions/upload-artifact@v4

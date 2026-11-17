@@ -4,6 +4,9 @@ import hashlib
 import json
 import sys
 import urllib.request
+import urllib.error
+import time
+from email.utils import parsedate_to_datetime
 from datetime import datetime,timezone
 from pathlib import Path
 from .engine import digest,probe,qa,run,save
@@ -25,17 +28,42 @@ def verify_source(path):
         raise ValueError('PORTUGUESE_SOURCE_HASH_MISMATCH')
 
 
+class SourceRateLimited(RuntimeError):
+    def __init__(self,retry_after_seconds=None):
+        super().__init__('WIKIMEDIA_SOURCE_RATE_LIMITED')
+        self.retry_after_seconds=retry_after_seconds
+
+
+def retry_delay(value):
+    if value is None:return None
+    try:return max(0,int(value))
+    except ValueError:
+        try:return max(0,int((parsedate_to_datetime(value)-datetime.now(timezone.utc)).total_seconds())+1)
+        except (ValueError,TypeError,OverflowError):return None
+
+
 def obtain(path):
     if path.exists():verify_source(path);return
     path.parent.mkdir(parents=True,exist_ok=True);temporary=path.with_suffix('.partial')
     try:
-        request=urllib.request.Request(FILE_URL,headers={'User-Agent':'NuvemEscura-research/1.0 (licensed-media-diagnostic)'})
-        with urllib.request.urlopen(request,timeout=60) as response,temporary.open('wb') as target:
-            total=0
-            while block:=response.read(1024*1024):
-                total+=len(block)
-                if total>60*1024*1024:raise ValueError('PORTUGUESE_SOURCE_SIZE_LIMIT')
-                target.write(block)
+        # Descriptive project/contact URL follows the Wikimedia User-Agent policy.
+        request=urllib.request.Request(FILE_URL,headers={'User-Agent':'NuvemEscuraDiagnosticBot/1.0 (https://github.com/joaopedrodiniz403-dev/canal-dark-cloud)'})
+        for attempt in range(2):
+            try:
+                with urllib.request.urlopen(request,timeout=60) as response,temporary.open('wb') as target:
+                    total=0
+                    while block:=response.read(1024*1024):
+                        total+=len(block)
+                        if total>60*1024*1024:raise ValueError('PORTUGUESE_SOURCE_SIZE_LIMIT')
+                        target.write(block)
+                break
+            except urllib.error.HTTPError as error:
+                if error.code!=429:raise
+                delay=retry_delay(error.headers.get('Retry-After') if error.headers else None)
+                error.close()
+                # No guessed loops or alternate route when the server blocks access.
+                if attempt or delay is None or delay>30:raise SourceRateLimited(delay) from None
+                time.sleep(delay)
         verify_source(temporary);temporary.replace(path)
     finally:
         temporary.unlink(missing_ok=True)
@@ -125,7 +153,15 @@ def main():
     p.add_argument('--upstream',type=Path,default=Path('work/chopify'))
     p.add_argument('--output',type=Path,default=Path('work/portuguese-validation'))
     p.add_argument('--download',action='store_true');args=p.parse_args()
-    if args.download:obtain(args.movie)
+    if args.download:
+        try:obtain(args.movie)
+        except SourceRateLimited as error:
+            report={'status':'BLOCKED_SOURCE_RATE_LIMIT','source_url':FILE_URL,'rights_reference':PAGE,
+                    'retry_after_seconds':error.retry_after_seconds,'asr_executed':False,'render_executed':False,
+                    'production_eligible':False,'editorial_approved':False,'publication_approved':False}
+            save(args.output/'validation.json',report)
+            print(json.dumps(report,indent=2))
+            raise SystemExit(2)
     print(json.dumps(validate(args.movie.resolve(),args.upstream.resolve(),args.output.resolve()),ensure_ascii=False,indent=2))
 
 

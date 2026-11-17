@@ -42,3 +42,32 @@ class PortugueseSourceTests(unittest.TestCase):
             with patch('nuvem.portuguese_validation.urllib.request.urlopen',return_value=response):
                 with self.assertRaisesRegex(ValueError,'SIZE_LIMIT'):obtain(p)
             self.assertEqual(response.read.call_count,61);self.assertFalse(p.exists());self.assertFalse(p.with_suffix('.partial').exists())
+    def test_429_without_retry_after_stops_without_loop(self):
+        from urllib.error import HTTPError
+        from nuvem.portuguese_validation import SourceRateLimited
+        with tempfile.TemporaryDirectory() as tmp,patch('nuvem.portuguese_validation.time.sleep') as sleep,patch('nuvem.portuguese_validation.urllib.request.urlopen',side_effect=HTTPError('https://upload.wikimedia.org/',429,'limited',{},None)) as network:
+            with self.assertRaises(SourceRateLimited):obtain(Path(tmp)/'source.webm')
+            self.assertEqual(network.call_count,1);sleep.assert_not_called()
+    def test_429_long_retry_after_does_not_retry_early(self):
+        from urllib.error import HTTPError
+        from nuvem.portuguese_validation import SourceRateLimited
+        with tempfile.TemporaryDirectory() as tmp,patch('nuvem.portuguese_validation.time.sleep') as sleep,patch('nuvem.portuguese_validation.urllib.request.urlopen',side_effect=HTTPError('https://upload.wikimedia.org/',429,'limited',{'Retry-After':'120'},None)):
+            with self.assertRaises(SourceRateLimited) as caught:obtain(Path(tmp)/'source.webm')
+            self.assertEqual(caught.exception.retry_after_seconds,120);sleep.assert_not_called()
+    def test_429_short_retry_after_is_honored_once(self):
+        import io
+        from urllib.error import HTTPError
+        data=b'unit verified source'
+        with tempfile.TemporaryDirectory() as tmp,patch('nuvem.portuguese_validation.SHA256',hashlib.sha256(data).hexdigest()),patch('nuvem.portuguese_validation.SHA1',hashlib.sha1(data).hexdigest()),patch('nuvem.portuguese_validation.time.sleep') as sleep,patch('nuvem.portuguese_validation.urllib.request.urlopen',side_effect=[HTTPError('https://upload.wikimedia.org/',429,'limited',{'Retry-After':'1'},None),io.BytesIO(data)]) as network:
+            p=Path(tmp)/'source.webm';obtain(p)
+            sleep.assert_called_once_with(1);self.assertEqual(network.call_count,2);self.assertEqual(p.read_bytes(),data)
+    def test_cli_rate_limit_report_does_not_claim_asr_or_render(self):
+        import contextlib,io,json,sys
+        from nuvem.portuguese_validation import SourceRateLimited,main
+        with tempfile.TemporaryDirectory() as tmp:
+            output=Path(tmp)/'out'
+            with patch.object(sys,'argv',['diagnostic','--download','--output',str(output)]),patch('nuvem.portuguese_validation.obtain',side_effect=SourceRateLimited()),patch('nuvem.portuguese_validation.validate') as process,contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaises(SystemExit) as caught:main()
+            self.assertEqual(caught.exception.code,2);process.assert_not_called()
+            r=json.loads((output/'validation.json').read_text())
+            self.assertEqual(r['status'],'BLOCKED_SOURCE_RATE_LIMIT');self.assertFalse(r['asr_executed']);self.assertFalse(r['render_executed'])
