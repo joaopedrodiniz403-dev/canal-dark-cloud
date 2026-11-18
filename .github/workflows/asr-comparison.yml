@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - tools/media_runtime.py
       - nuvem/asr_benchmark.py
       - tests/test_asr_benchmark.py
       - .github/workflows/asr-comparison.yml
@@ -30,11 +31,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Instalar somente o backend escolhido com PyAV compativel
+      - name: Conferir FFmpeg e fontes, instalar somente capacidades ausentes
+        timeout-minutes: 5
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core
-          python -m pip install -r work/chopify/requirements.txt -c requirements-cuts.txt
+          if ! python -m tools.media_runtime; then
+            sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 update
+            sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=30 install -y ffmpeg fonts-dejavu-core fontconfig
+            python -m tools.media_runtime
+          fi
+      - name: Instalar dependencias Python do backend escolhido
+        timeout-minutes: 5
+        run: python -m pip install --timeout 30 --retries 2 -r work/chopify/requirements.txt -c requirements-cuts.txt
       - name: Testar comparabilidade e configuracao de modelo
         run: python -m unittest tests.test_asr_benchmark -v
       - name: Comparar small e medium no mesmo audio licenciado
