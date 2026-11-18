@@ -72,6 +72,8 @@ def execute(source, root, upstream, output, max_clips=5):
     reject_test_source(source)
     model = asr_model(source.get('asr_model', 'small'))
     mode = framing_mode(source.get('framing_mode','native'))
+    caption_mode=source.get('caption_mode','native')
+    if caption_mode not in ('native','readable'):raise ValueError('CAPTION_MODE_UNSUPPORTED')
     path = authorize(source, root)
     # A supplied fixture transcript must not be used as evidence of a real cut.
     if source.get('transcript'):
@@ -81,7 +83,7 @@ def execute(source, root, upstream, output, max_clips=5):
     output.mkdir(parents=True, exist_ok=True)
     report = {'backend': REPOSITORY, 'revision': REVISION, 'source': str(path),
               'status': 'FAILED', 'editorial_approved': False, 'publication_approved': False,
-              'publication_enabled': False, 'rights': source['rights'], 'outputs': [], 'asr_model': model,'framing_mode':mode}
+              'publication_enabled': False, 'rights': source['rights'], 'outputs': [], 'asr_model': model,'framing_mode':mode,'caption_mode':caption_mode}
     args = command(upstream, path, output/'project', output/'exports', max_clips, model)
     report['command'] = args
     try:
@@ -97,6 +99,10 @@ def execute(source, root, upstream, output, max_clips=5):
         outputs = sorted((output/'exports').glob('*.mp4'))
         report['outputs'] = [str(p.relative_to(output)) for p in outputs]
         report['status'] = 'AWAITING_TECHNICAL_AND_EDITORIAL_REVIEW' if outputs else 'NO_CANDIDATES'
+        if caption_mode=='readable' and mode=='native' and report['outputs']:
+            from .readable_portrait import process_outputs as readable_outputs
+            report['outputs'],report['readable']=readable_outputs(source,path,output,upstream,report['outputs'])
+            if not report['outputs']:report['status']='CAPTIONS_REJECTED'
         if mode=='preserve_two_faces' and report['outputs']:
             report['outputs'],report['framing']=process_outputs(source,path,output,upstream,report['outputs'])
             if not report['outputs']:report['status']='FRAMING_REJECTED'

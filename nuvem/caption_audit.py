@@ -50,8 +50,10 @@ def audit(text,duration,reference_words=None):
         if not 0<=cue['start']<cue['end']<=duration+.05:issue('CUE_OUT_OF_BOUNDS',i)
         if cue['start']<previous_end-.001:issue('OVERLAPPING_CUES',i)
         previous_end=max(previous_end,cue['end'])
-        if span<POLICY['min_cue_seconds']:issue('CUE_TOO_BRIEF',i,duration_seconds=round(span,3))
-        cps=len(' '.join(lines))/span if span>0 else None
+        # SRT has integer-millisecond timestamps; avoid float errors at exactly 25 cps/300 ms.
+        span_ms=round(cue['end']*1000)-round(cue['start']*1000)
+        if span_ms<round(POLICY['min_cue_seconds']*1000):issue('CUE_TOO_BRIEF',i,duration_seconds=span_ms/1000)
+        cps=len(' '.join(lines))*1000/span_ms if span_ms>0 else None
         if cps is not None:
             rates.append(cps)
             if cps>POLICY['max_cps']:issue('READING_SPEED_EXCEEDED',i,characters_per_second=round(cps,3))

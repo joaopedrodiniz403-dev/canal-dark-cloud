@@ -76,6 +76,7 @@ def cycle(root, manifest, upstream, output, state, runner=execute, inspector=qa)
             entry.update(status='PROCESSED' if result['outputs'] else result.get('status','NO_CANDIDATES'))
             if result.get('framing') is not None:entry['framing']=result['framing']
             if result.get('captions') is not None:entry['captions']=result['captions']
+            if result.get('readable') is not None:entry['readable']=result['readable']
         except Exception as e:
             entry.update(status='FAILED', reason=str(e))
     report['durable_pending_reviews']=sum(x['status']=='PENDING_HUMAN_REVIEW' for x in state.get('reviews',{}).values())

@@ -1,7 +1,7 @@
 """Plan readable cues without changing speech, then export one plan to ASS and SRT."""
 import math
 from pathlib import Path
-from .caption_audit import audit
+from .caption_audit import audit,POLICY
 from .engine import ass_escape,ass_time,save
 
 
@@ -16,6 +16,8 @@ def lines_for(words):
 
 
 def plan(words,duration):
+    if type(duration) not in (int,float) or not math.isfinite(duration) or duration<=0:
+        raise ValueError('INVALID_REFLOW_DURATION')
     previous=0
     for w in words:
         if not isinstance(w.get('word'),str) or not w['word'].strip() or any(c in w['word'] for c in '\n\r<>'):
@@ -23,22 +25,36 @@ def plan(words,duration):
         if not all(type(w.get(k)) in (int,float) and math.isfinite(w[k]) for k in ('start','end')) or not previous-.001<=w['start']<w['end']<=duration+.05:
             raise ValueError('INVALID_REFLOW_TIMING')
         previous=w['end']
-    count=len(words);best={count:(0,[])}
-    for i in range(count-1,-1,-1):
-        choices=[]
+    # ASS is centisecond based. Plan on that grid so ASS/SRT timings agree.
+    tolerance=POLICY['alignment_tolerance_seconds']
+    count=len(words);states={0:{0:(0,[])}}
+    for i in range(count):
+        if i not in states:continue
         for j in range(i+1,min(count,i+8)+1):
-            group=words[i:j];span=group[-1]['end']-group[0]['start'];lines=lines_for(group)
-            if j not in best or not lines or span>4 or any(b['start']-a['end']>1.2 for a,b in zip(group,group[1:])):continue
-            text='\n'.join(lines)
-            if span<.3 or len(' '.join(lines))/span>25:continue
-            cue={'start':group[0]['start'],'end':group[-1]['end'],'text':text,'word_range':[i,j]}
-            # Prefer small stable groups, then fewer cues; never relax constraints.
-            cost=(len(group)-3)**2+1+best[j][0]
-            choices.append((cost,[cue]+best[j][1]))
-        if choices:best[i]=min(choices,key=lambda x:x[0])
-    return {'schema':1,'status':'PLANNED' if count and 0 in best else 'NO_READABLE_PLAN',
-            'cues':best[0][1] if count and 0 in best else [],'word_count':count,
-            'speech_modified':False,'editorial_approved':False}
+            group=words[i:j];lines=lines_for(group)
+            if not lines or any(b['start']-a['end']>1.2 for a,b in zip(group,group[1:])):continue
+            first,last=group[0]['start'],group[-1]['end']
+            start_min=max(0,math.ceil((first-tolerance)*100));start_max=math.floor(first*100)
+            end_min=math.ceil(last*100);end_max=min(math.floor((last+tolerance)*100),math.floor(duration*100))
+            text='\n'.join(lines);characters=len(' '.join(lines))
+            needed=max(math.ceil(POLICY['min_cue_seconds']*100),math.ceil(characters/POLICY['max_cps']*100))
+            for prior_end,(prior_cost,prior_cues) in tuple(states[i].items()):
+                for start in range(max(start_min,prior_end),start_max+1):
+                    end=max(end_min,start+needed)
+                    if end>end_max or end-start>400:continue
+                    lead=first-start/100;lag=end/100-last
+                    cost=prior_cost+100*((len(group)-3)**2+1)+5*round((lead+lag)*100)
+                    old=states.setdefault(j,{}).get(end)
+                    if old is None or cost<old[0]:
+                        cue={'start':start/100,'end':end/100,'text':text,'word_range':[i,j]}
+                        states[j][end]=(cost,prior_cues+[cue])
+    choices=states.get(count,{}) if count else {}
+    cues=min(choices.values(),key=lambda x:x[0])[1] if choices else []
+    return {'schema':1,'status':'PLANNED' if cues else 'NO_READABLE_PLAN','cues':cues,'word_count':count,
+            'speech_modified':False,'word_timestamps_modified':False,'editorial_approved':False,
+            'display_tolerance_seconds':tolerance,
+            'max_display_lead_seconds':round(max((words[c['word_range'][0]]['start']-c['start'] for c in cues),default=0),4),
+            'max_display_lag_seconds':round(max((c['end']-words[c['word_range'][1]-1]['end'] for c in cues),default=0),4)}
 
 
 def srt_time(seconds):

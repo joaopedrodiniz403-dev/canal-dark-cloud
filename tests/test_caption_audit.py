@@ -82,3 +82,13 @@ class CaptionPipelineTests(unittest.TestCase):
             with patch('nuvem.chopify_backend.verify_checkout'),patch('nuvem.chopify_backend.subprocess.run',return_value=subprocess.CompletedProcess([],0)),patch('nuvem.chopify_backend.audit_outputs',return_value=([],{'items':[{'passed':False}]})):
                 r=execute(src,p,p,out)
             self.assertEqual(r['status'],'CAPTIONS_REJECTED');self.assertEqual(r['outputs'],[])
+
+class MillisecondBoundaryTests(unittest.TestCase):
+    def test_exact_25_cps_at_nonzero_time_is_not_float_rejected(self):
+        text='1\n00:00:10,260 --> 00:00:10,780\nabc def ghi j\n'
+        result=audit(text,12)
+        self.assertTrue(result['passed']);self.assertEqual(result['max_cps'],25)
+        self.assertFalse(audit(text.replace('10,780','10,779'),12)['passed'])
+    def test_exact_300_ms_is_not_float_rejected(self):
+        result=audit('1\n00:00:04,010 --> 00:00:04,310\nOi\n',6)
+        self.assertTrue(result['passed'])

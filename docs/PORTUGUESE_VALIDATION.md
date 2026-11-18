@@ -38,3 +38,7 @@ Evidências em docs/evidence/2026-11-17/. Os números da nuvem ficam separados n
 O primeiro run de 17/11 (44073056685) recebeu HTTP 429 do Wikimedia no runner GitHub antes do ASR português. O êxito local não foi apresentado como execução na nuvem. O cliente identifica o projeto conforme a política oficial de User-Agent e respeita Retry-After: no máximo uma repetição, somente se o servidor indicar espera <=30 s. Sem indicação ou com espera maior, interrompe e grava BLOCKED_SOURCE_RATE_LIMIT, asr_executed=false e render_executed=false; o job continua com saída não zero. Não há espelhamento arbitrário, mudança de rota ou fallback de conteúdo.
 
 Política consultada: https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy . Se o bloqueio persistir, o runner precisará obter o mesmo arquivo verificado por armazenamento autorizado; esse acesso continua pendente.
+
+## Correção de exibição em 18/11
+
+O novo planejador mantém tempos das palavras e usa somente a tolerância de 150 ms já prevista no gate. Pode produzir um segundo diagnóstico com o mesmo candidato e recorte nativo, renderizado novamente com ASS/SRT do mesmo plano. As marcas NOT APPROVED e a licença CC BY-SA 4.0 continuam obrigatórias. A medição de 17/11 permanece histórica; resultados novos ficam em docs/evidence/2026-11-18 e na descrição do PR, separados entre ambiente herdado e Actions.

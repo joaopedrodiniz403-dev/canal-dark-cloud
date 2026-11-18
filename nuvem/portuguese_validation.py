@@ -76,6 +76,19 @@ def licensed_source(scene):
                       'verified_by':'Agent checked file revision 1121577018, own-work declaration, CC BY-SA 4.0 and published SHA-1'}}
 
 
+def mark(video,marked):
+    filters="drawtext=text='DIAGNOSTIC - NOT APPROVED':fontsize=30:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=70,drawtext=text='CC BY-SA 4.0 - Rodrigo Tetsuo Argenton':fontsize=24:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=h-105,drawtext=text='Reportagem - Erica Azzellini - Wikimedia Commons':fontsize=22:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=h-65"
+    run(['ffmpeg','-y','-hide_banner','-loglevel','error','-i',video,'-vf',filters,'-metadata','comment='+ATTRIBUTION,
+         '-metadata','copyright=CC BY-SA 4.0','-c:v','libx264','-preset','veryfast','-crf','20','-threads','2',
+         '-c:a','copy','-movflags','+faststart',marked]);video.unlink()
+    for suffix in ('.srt','.png'):
+        old=video.with_suffix(suffix)
+        if old.exists():old.rename(marked.with_suffix(suffix))
+    video.with_suffix('.meta.json').unlink(missing_ok=True)
+    save(marked.with_suffix('.meta.json'),{'attribution':ATTRIBUTION,'license_url':LICENSE,'production_eligible':False,
+                                         'editorial_approved':False,'publication_approved':False})
+
+
 def validate(movie,upstream,output):
     verify_source(movie);verify_checkout(upstream);output.mkdir(parents=True,exist_ok=True)
     report={'schema':1,'generated_at':datetime.now(timezone.utc).isoformat(),
@@ -118,24 +131,27 @@ def validate(movie,upstream,output):
                 out_dir=reference,style='bold',do_tighten=True,loudnorm=True,caption={'words_per_cue':3})
         finally:render_clips.detect_track=original
         marked=reference/'pt-interview-NOT-APPROVED.mp4'
-        filters="drawtext=text='DIAGNOSTIC - NOT APPROVED':fontsize=30:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=70,drawtext=text='CC BY-SA 4.0 - Rodrigo Tetsuo Argenton':fontsize=24:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=h-105,drawtext=text='Reportagem - Erica Azzellini - Wikimedia Commons':fontsize=22:fontcolor=white:box=1:boxcolor=black@0.6:x=(w-tw)/2:y=h-65"
-        run(['ffmpeg','-y','-hide_banner','-loglevel','error','-i',video,'-vf',filters,'-metadata','comment='+ATTRIBUTION,
-             '-metadata','copyright=CC BY-SA 4.0','-c:v','libx264','-preset','veryfast','-crf','20','-threads','2',
-             '-c:a','copy','-movflags','+faststart',marked]);video.unlink()
-        for suffix in ('.srt','.png'):
-            old=video.with_suffix(suffix)
-            if old.exists():old.rename(marked.with_suffix(suffix))
-        video.with_suffix('.meta.json').unlink(missing_ok=True)
-        save(marked.with_suffix('.meta.json'),{'attribution':ATTRIBUTION,'license_url':LICENSE,'production_eligible':False,
-                                             'editorial_approved':False,'publication_approved':False})
+        mark(video,marked)
         keeps=tighten.plan_cuts(transcript['words'],segment['start'],segment['end'])
         mapped,duration=tighten.remap_words(transcript['words'],segment['start'],keeps)
         readability=reflow_plan(mapped,duration)
         save(reference/'caption-reflow-plan.json',readability)
         report['caption_reflow_feasibility']={'status':readability['status'],'cue_count':len(readability['cues']),
-             'scope':'Planning only; no alternative render or approval'}
+             'scope':'Timing/grouping feasibility; render measured separately in readable_render'}
         report['reference_render'].update(video=str(marked.relative_to(output)),sha256=digest(marked),
             qa=qa(marked,mapped,duration),caption_audit=audit(marked.with_suffix('.srt').read_text(encoding='utf-8-sig'),float(probe(marked)['format']['duration']),mapped))
+        if readability['status']=='PLANNED':
+            from .readable_portrait import render as readable_render
+            readable_dir=reference/'readable'
+            alternate=readable_render(segment,transcript['words'],scene,stream['width'],stream['height'],project,readable_dir,upstream)
+            final=readable_dir/'pt-readable-NOT-APPROVED.mp4';mark(alternate,final)
+            report['readable_render']={'video':str(final.relative_to(output)),'sha256':digest(final),
+                'source_interval':[segment['start'],segment['end']],'scope':'SAME_CANDIDATE_DIAGNOSTIC_ONLY',
+                'qa':qa(final,mapped,duration),
+                'caption_audit':audit(final.with_suffix('.srt').read_text(encoding='utf-8-sig'),float(probe(final)['format']['duration']),mapped),
+                'display_plan':{'max_lead_seconds':readability['max_display_lead_seconds'],
+                                'max_lag_seconds':readability['max_display_lag_seconds']},
+                'editorial_approved':False,'publication_approved':False}
         report['status']='DIAGNOSTIC_COMPLETED_NO_EDITORIAL_APPROVAL'
         report['limitations']=['Portuguese interview, not GTA RP/gameplay','No independent reference transcript or measured WER',
             'ASR/captions/crop need human listening and visual review','Native selector score is heuristic, not validated editorial quality']

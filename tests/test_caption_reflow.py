@@ -31,3 +31,16 @@ class ReflowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp);write([{'word':r'{\pos(0,0)}','start':0,'end':1}],1,p/'a.ass',p/'a.srt')
             self.assertNotIn(r'{\pos(0,0)}',(p/'a.ass').read_text())
+    def test_bounded_display_padding_preserves_word_times(self):
+        import copy
+        words=[{'word':'fala','start':.2,'end':.3}];original=copy.deepcopy(words)
+        p=plan(words,1);self.assertEqual(p['status'],'PLANNED');self.assertEqual(words,original)
+        c=p['cues'][0];self.assertLessEqual(.2-c['start'],.15);self.assertLessEqual(c['end']-.3,.15)
+        self.assertGreaterEqual(c['start'],0);self.assertLessEqual(c['end'],1)
+        self.assertFalse(p['word_timestamps_modified'])
+    def test_padding_cannot_overlap_adjacent_cues_or_escape_media(self):
+        words=[{'word':'Olá','start':.1,'end':.5},{'word':'sim','start':2,'end':2.4}]
+        p=plan(words,2.4);self.assertEqual(p['status'],'PLANNED')
+        self.assertEqual(len(p['cues']),2)
+        self.assertLessEqual(p['cues'][0]['end'],p['cues'][1]['start'])
+        self.assertGreaterEqual(p['cues'][0]['start'],0);self.assertLessEqual(p['cues'][-1]['end'],2.4)
