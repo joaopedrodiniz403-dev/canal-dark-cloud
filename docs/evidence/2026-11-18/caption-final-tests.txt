@@ -1,0 +1,41 @@
+test_ass_control_characters_are_escaped (tests.test_caption_reflow.ReflowTests.test_ass_control_characters_are_escaped) ... ok
+test_bounded_display_padding_preserves_word_times (tests.test_caption_reflow.ReflowTests.test_bounded_display_padding_preserves_word_times) ... ok
+test_decimal_clip_end_is_not_lost_to_binary_tick_rounding (tests.test_caption_reflow.ReflowTests.test_decimal_clip_end_is_not_lost_to_binary_tick_rounding) ... ok
+test_impossible_speech_is_rejected_without_extending_timestamps (tests.test_caption_reflow.ReflowTests.test_impossible_speech_is_rejected_without_extending_timestamps) ... ok
+test_invalid_overlap_and_hidden_words_not_silently_dropped (tests.test_caption_reflow.ReflowTests.test_invalid_overlap_and_hidden_words_not_silently_dropped) ... ok
+test_long_silence_does_not_join_unrelated_speech (tests.test_caption_reflow.ReflowTests.test_long_silence_does_not_join_unrelated_speech) ... ok
+test_padding_cannot_overlap_adjacent_cues_or_escape_media (tests.test_caption_reflow.ReflowTests.test_padding_cannot_overlap_adjacent_cues_or_escape_media) ... ok
+test_regroups_rapid_three_word_caption_without_changing_words (tests.test_caption_reflow.ReflowTests.test_regroups_rapid_three_word_caption_without_changing_words) ... ok
+test_accent_change_not_hidden (tests.test_caption_audit.CaptionAuditTests.test_accent_change_not_hidden) ... ok
+test_bom_and_crlf (tests.test_caption_audit.CaptionAuditTests.test_bom_and_crlf) ... ok
+test_invalid_reference_rejected (tests.test_caption_audit.CaptionAuditTests.test_invalid_reference_rejected) ... ok
+test_long_line_and_three_lines_rejected (tests.test_caption_audit.CaptionAuditTests.test_long_line_and_three_lines_rejected) ... ok
+test_malformed_block_never_silently_ignored (tests.test_caption_audit.CaptionAuditTests.test_malformed_block_never_silently_ignored) ... ok
+test_markup_rejected (tests.test_caption_audit.CaptionAuditTests.test_markup_rejected) ... ok
+test_missing_word_rejected (tests.test_caption_audit.CaptionAuditTests.test_missing_word_rejected) ... ok
+test_negative_or_zero_duration_rejected (tests.test_caption_audit.CaptionAuditTests.test_negative_or_zero_duration_rejected) ... ok
+test_no_reference_is_not_speech_verification (tests.test_caption_audit.CaptionAuditTests.test_no_reference_is_not_speech_verification) ... ok
+test_overlapping_cues_rejected (tests.test_caption_audit.CaptionAuditTests.test_overlapping_cues_rejected) ... ok
+test_portuguese_unicode_case_and_punctuation_preserved (tests.test_caption_audit.CaptionAuditTests.test_portuguese_unicode_case_and_punctuation_preserved) ... ok
+test_rapid_caption_rejected (tests.test_caption_audit.CaptionAuditTests.test_rapid_caption_rejected) ... ok
+test_shifted_caption_rejected_even_when_text_matches (tests.test_caption_audit.CaptionAuditTests.test_shifted_caption_rejected_even_when_text_matches) ... ok
+test_too_brief_caption_rejected (tests.test_caption_audit.CaptionAuditTests.test_too_brief_caption_rejected) ... ok
+test_backend_does_not_return_caption_rejected_native_exports (tests.test_caption_audit.CaptionPipelineTests.test_backend_does_not_return_caption_rejected_native_exports) ... ok
+test_rejected_export_does_not_enter_queue (tests.test_caption_audit.CaptionPipelineTests.test_rejected_export_does_not_enter_queue) ... ok
+test_exact_150_ms_alignment_boundary_is_not_float_rejected (tests.test_caption_audit.MillisecondBoundaryTests.test_exact_150_ms_alignment_boundary_is_not_float_rejected) ... ok
+test_exact_25_cps_at_nonzero_time_is_not_float_rejected (tests.test_caption_audit.MillisecondBoundaryTests.test_exact_25_cps_at_nonzero_time_is_not_float_rejected) ... ok
+test_exact_300_ms_is_not_float_rejected (tests.test_caption_audit.MillisecondBoundaryTests.test_exact_300_ms_is_not_float_rejected) ... ok
+test_functions_restored_after_failed_render (tests.test_readable_portrait.ReadablePortraitTests.test_functions_restored_after_failed_render) ... ok
+test_infrastructure_failure_is_not_disguised_as_plan_rejection (tests.test_readable_portrait.ReadablePortraitTests.test_infrastructure_failure_is_not_disguised_as_plan_rejection) ... ok
+test_no_native_candidate_never_calls_optional_readable_stage (tests.test_readable_portrait.ReadablePortraitTests.test_no_native_candidate_never_calls_optional_readable_stage) ... ok
+test_same_plan_used_for_burned_ass_and_external_srt (tests.test_readable_portrait.ReadablePortraitTests.test_same_plan_used_for_burned_ass_and_external_srt) ... ok
+test_selector_rejection_blocks_readable_render (tests.test_readable_portrait.ReadablePortraitTests.test_selector_rejection_blocks_readable_render) ... ok
+test_command_is_local_and_bounded (tests.test_chopify_backend.ChopifyAdapterTests.test_command_is_local_and_bounded) ... ok
+test_fixture_blocked_before_process (tests.test_chopify_backend.ChopifyAdapterTests.test_fixture_blocked_before_process) ... ok
+test_real_output_discovery_contract (tests.test_chopify_backend.ChopifyAdapterTests.test_real_output_discovery_contract) ... ok
+test_rights_blocked_before_process (tests.test_chopify_backend.ChopifyAdapterTests.test_rights_blocked_before_process) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.028s
+
+OK

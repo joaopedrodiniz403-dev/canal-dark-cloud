@@ -1,5 +1,6 @@
 """Plan readable cues without changing speech, then export one plan to ASS and SRT."""
 import math
+from decimal import Decimal,ROUND_CEILING,ROUND_FLOOR
 from pathlib import Path
 from .caption_audit import audit,POLICY
 from .engine import ass_escape,ass_time,save
@@ -27,6 +28,9 @@ def plan(words,duration):
         previous=w['end']
     # ASS is centisecond based. Plan on that grid so ASS/SRT timings agree.
     tolerance=POLICY['alignment_tolerance_seconds']
+    tolerance_decimal=Decimal(str(tolerance));duration_decimal=Decimal(str(duration))
+    def tick(value,up=False):
+        return int((value*100).to_integral_value(rounding=ROUND_CEILING if up else ROUND_FLOOR))
     count=len(words);states={0:{0:(0,[])}}
     for i in range(count):
         if i not in states:continue
@@ -34,10 +38,12 @@ def plan(words,duration):
             group=words[i:j];lines=lines_for(group)
             if not lines or any(b['start']-a['end']>1.2 for a,b in zip(group,group[1:])):continue
             first,last=group[0]['start'],group[-1]['end']
-            start_min=max(0,math.ceil((first-tolerance)*100));start_max=math.floor(first*100)
-            end_min=math.ceil(last*100);end_max=min(math.floor((last+tolerance)*100),math.floor(duration*100))
+            first_decimal,last_decimal=Decimal(str(first)),Decimal(str(last))
+            start_min=max(0,tick(first_decimal-tolerance_decimal,True));start_max=tick(first_decimal)
+            end_min=tick(last_decimal,True);end_max=min(tick(last_decimal+tolerance_decimal),tick(duration_decimal))
             text='\n'.join(lines);characters=len(' '.join(lines))
-            needed=max(math.ceil(POLICY['min_cue_seconds']*100),math.ceil(characters/POLICY['max_cps']*100))
+            needed=max(tick(Decimal(str(POLICY['min_cue_seconds'])),True),
+                       int((Decimal(characters*100)/Decimal(str(POLICY['max_cps']))).to_integral_value(rounding=ROUND_CEILING)))
             for prior_end,(prior_cost,prior_cues) in tuple(states[i].items()):
                 for start in range(max(start_min,prior_end),start_max+1):
                     end=max(end_min,start+needed)

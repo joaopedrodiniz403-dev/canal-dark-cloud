@@ -167,10 +167,10 @@
   "caption_reflow_feasibility": {
     "status": "PLANNED",
     "cue_count": 15,
-    "scope": "Timing/grouping feasibility; render measured separately in readable_render"
+    "scope": "Planning only; no alternative render or approval"
   },
   "readable_render": {
-    "video": "reference/readable/pt-readable-NOT-APPROVED.mp4",
+    "video": "reference/readable-final/pt-readable-NOT-APPROVED.mp4",
     "sha256": "da93627464d8f761bce49750b819f739b9700866100e8b30e49bf01e9368cd5f",
     "source_interval": [
       0.0,

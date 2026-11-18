@@ -4,7 +4,7 @@ O diagnóstico português mostrou que trocar grupos de palavras não bastava: o 
 
 A exibição fica numa grade de centésimos de segundo comum a ASS e SRT, nunca sobreposta ou fora do vídeo, mantendo 300 ms mínimos, 25 caracteres/s máximos, duas linhas de 32 caracteres no planejador, até oito palavras e quatro segundos por grupo. A preferência por grupos próximos de três palavras penaliza também deslocamento da exibição. Sem solução, continua NO_READABLE_PLAN; não baixa limites para aprovar.
 
-A auditoria de SRT agora calcula duração e velocidade em milissegundos inteiros, evitando falsa reprovação de exatamente 25 caracteres/s ou 300 ms por erro de ponto flutuante. Um intervalo 1 ms menor que o permitido continua reprovado. O limite não foi aumentado.
+A auditoria de SRT agora calcula duração e velocidade em milissegundos inteiros, evitando falsa reprovação de exatamente 25 caracteres/s ou 300 ms por erro de ponto flutuante. Um intervalo 1 ms menor que o permitido continua reprovado. A quantização para centésimos e a comparação de 150 ms usam Decimal: 18,58 s não podem perder um tick por representação binária. O limite não foi aumentado.
 
 ## Renderização e integração
 

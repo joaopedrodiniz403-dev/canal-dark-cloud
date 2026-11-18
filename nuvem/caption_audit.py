@@ -1,5 +1,6 @@
 """Subtitle export integrity/readability gates, not speech or editorial approval."""
 import math
+from decimal import Decimal
 import re
 import sys
 import unicodedata
@@ -72,9 +73,9 @@ def audit(text,duration,reference_words=None):
         result['reference_match']='MATCH' if match else 'MISMATCH'
         if not match:result['issues'].append({'code':'TRANSCRIPT_EXPORT_MISMATCH'})
         else:
-            tolerance=POLICY['alignment_tolerance_seconds']
+            tolerance=Decimal(str(POLICY['alignment_tolerance_seconds']))
             for i,(a,b,cue) in enumerate(bounds,1):
-                if abs(cue['start']-reference[a][1])>tolerance or abs(cue['end']-reference[b-1][2])>tolerance:issue('TRANSCRIPT_TIMING_MISMATCH',i)
+                if abs(Decimal(str(cue['start']))-Decimal(str(reference[a][1])))>tolerance or abs(Decimal(str(cue['end']))-Decimal(str(reference[b-1][2])))>tolerance:issue('TRANSCRIPT_TIMING_MISMATCH',i)
     result['passed']=not result['issues']
     return result
 

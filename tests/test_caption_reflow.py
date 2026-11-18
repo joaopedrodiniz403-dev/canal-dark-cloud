@@ -35,7 +35,9 @@ class ReflowTests(unittest.TestCase):
         import copy
         words=[{'word':'fala','start':.2,'end':.3}];original=copy.deepcopy(words)
         p=plan(words,1);self.assertEqual(p['status'],'PLANNED');self.assertEqual(words,original)
-        c=p['cues'][0];self.assertLessEqual(.2-c['start'],.15);self.assertLessEqual(c['end']-.3,.15)
+        from decimal import Decimal
+        c=p['cues'][0];self.assertLessEqual(Decimal('.2')-Decimal(str(c['start'])),Decimal('.15'))
+        self.assertLessEqual(Decimal(str(c['end']))-Decimal('.3'),Decimal('.15'))
         self.assertGreaterEqual(c['start'],0);self.assertLessEqual(c['end'],1)
         self.assertFalse(p['word_timestamps_modified'])
     def test_padding_cannot_overlap_adjacent_cues_or_escape_media(self):
@@ -44,3 +46,6 @@ class ReflowTests(unittest.TestCase):
         self.assertEqual(len(p['cues']),2)
         self.assertLessEqual(p['cues'][0]['end'],p['cues'][1]['start'])
         self.assertGreaterEqual(p['cues'][0]['start'],0);self.assertLessEqual(p['cues'][-1]['end'],2.4)
+    def test_decimal_clip_end_is_not_lost_to_binary_tick_rounding(self):
+        p=plan([{'word':'fim','start':18.2,'end':18.58}],18.58)
+        self.assertEqual(p['status'],'PLANNED');self.assertEqual(p['cues'][-1]['end'],18.58)

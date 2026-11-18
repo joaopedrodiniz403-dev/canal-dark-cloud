@@ -92,3 +92,8 @@ class MillisecondBoundaryTests(unittest.TestCase):
     def test_exact_300_ms_is_not_float_rejected(self):
         result=audit('1\n00:00:04,010 --> 00:00:04,310\nOi\n',6)
         self.assertTrue(result['passed'])
+    def test_exact_150_ms_alignment_boundary_is_not_float_rejected(self):
+        text='1\n00:00:00,410 --> 00:00:00,900\nfala\n'
+        words=[{'word':'fala','start':.56,'end':.9}]
+        self.assertTrue(audit(text,1,words)['passed'])
+        self.assertFalse(audit(text.replace('00,410','00,409'),1,words)['passed'])

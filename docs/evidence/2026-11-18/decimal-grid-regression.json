@@ -1,0 +1,28 @@
+{
+  "failed_run": 44295639022,
+  "observed_duration_seconds": 18.58,
+  "prior_binary_floor_ticks": 1857,
+  "exact_decimal_ticks": 1858,
+  "new_plan_status": "PLANNED",
+  "caption_audit": {
+    "schema": 1,
+    "scope": "SUBTITLE_EXPORT_INTEGRITY_AND_READABILITY_ONLY",
+    "policy": {
+      "max_cps": 25,
+      "min_cue_seconds": 0.3,
+      "max_lines": 2,
+      "max_line_characters": 42,
+      "alignment_tolerance_seconds": 0.15
+    },
+    "passed": true,
+    "editorial_approved": false,
+    "speech_accuracy_verified": false,
+    "reference_match": "MATCH",
+    "issues": [],
+    "cue_count": 19,
+    "max_cps": 25.0,
+    "reference_token_count": 74,
+    "export_token_count": 74
+  },
+  "scope": "Recomputed from the failed run actual ASR words; not a new English render or editorial approval"
+}
