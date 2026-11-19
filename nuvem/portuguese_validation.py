@@ -137,6 +137,7 @@ def validate(movie,upstream,output):
         readability=reflow_plan(mapped,duration)
         save(reference/'caption-reflow-plan.json',readability)
         report['caption_reflow_feasibility']={'status':readability['status'],'cue_count':len(readability['cues']),
+            'failure':readability['failure'],
              'scope':'Timing/grouping feasibility; render measured separately in readable_render'}
         report['reference_render'].update(video=str(marked.relative_to(output)),sha256=digest(marked),
             qa=qa(marked,mapped,duration),caption_audit=audit(marked.with_suffix('.srt').read_text(encoding='utf-8-sig'),float(probe(marked)['format']['duration']),mapped))

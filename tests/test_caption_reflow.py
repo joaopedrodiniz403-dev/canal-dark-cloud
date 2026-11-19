@@ -49,3 +49,21 @@ class ReflowTests(unittest.TestCase):
     def test_decimal_clip_end_is_not_lost_to_binary_tick_rounding(self):
         p=plan([{'word':'fim','start':18.2,'end':18.58}],18.58)
         self.assertEqual(p['status'],'PLANNED');self.assertEqual(p['cues'][-1]['end'],18.58)
+
+    def test_actual_actions_transcript_reports_bounded_failure_without_text(self):
+        import json
+        fixture=json.loads((Path(__file__).parent/'fixtures/pt-actions-reflow.json').read_text())
+        result=plan(fixture['words'],fixture['duration'])
+        self.assertEqual(result['status'],'NO_READABLE_PLAN')
+        failure=result['failure']
+        self.assertEqual(failure['reachable_prefix_words'],34)
+        self.assertEqual(failure['total_words'],141)
+        self.assertEqual(len(failure['attempts']),8)
+        self.assertTrue(all(a['reasons'] for a in failure['attempts']))
+        self.assertFalse(failure['transcript_text_included'])
+        self.assertNotIn('word',failure['attempts'][0])
+        self.assertFalse(result['editorial_approved'])
+
+    def test_empty_and_success_have_distinct_failure_diagnostics(self):
+        self.assertEqual(plan([],1)['failure']['code'],'EMPTY_TRANSCRIPT')
+        self.assertIsNone(plan([{'word':'Olá','start':0,'end':1}],1)['failure'])

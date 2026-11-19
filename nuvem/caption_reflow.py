@@ -56,7 +56,38 @@ def plan(words,duration):
                         states[j][end]=(cost,prior_cues+[cue])
     choices=states.get(count,{}) if count else {}
     cues=min(choices.values(),key=lambda x:x[0])[1] if choices else []
+    failure=None
+    if not cues:
+        frontier=max(states)
+        attempts=[]
+        # Earliest reachable end gives the most optimistic timing capacity.
+        # This describes this bounded solver, not impossibility under all layouts.
+        for j in range(frontier+1,min(count,frontier+8)+1):
+            group=words[frontier:j];lines=lines_for(group)
+            reasons=[]
+            if not lines:reasons.append('LINE_LAYOUT_LIMIT')
+            if any(b['start']-a['end']>1.2 for a,b in zip(group,group[1:])):
+                reasons.append('SPEECH_GAP_LIMIT')
+            first,last=Decimal(str(group[0]['start'])),Decimal(str(group[-1]['end']))
+            start=max(0,tick(first-tolerance_decimal,True),min(states[frontier]))
+            start_max=tick(first)
+            end_max=min(tick(last+tolerance_decimal),tick(duration_decimal))
+            characters=sum(len(w['word'].strip()) for w in group)+len(group)-1
+            needed=max(tick(Decimal(str(POLICY['min_cue_seconds'])),True),
+                       int((Decimal(characters*100)/Decimal(str(POLICY['max_cps']))).to_integral_value(rounding=ROUND_CEILING)))
+            if start>start_max:reasons.append('PREVIOUS_CUE_COLLISION')
+            if end_max-start<needed:reasons.append('INSUFFICIENT_DISPLAY_TIME')
+            if max(tick(last,True)-start,needed)>400:reasons.append('MAX_CUE_DURATION')
+            attempts.append({'word_range':[frontier,j],'character_count':characters,
+                'required_display_ticks':needed,'optimistic_available_ticks':max(0,end_max-start),
+                'reasons':reasons})
+        failure={'code':'BOUNDED_REFLOW_SEARCH_EXHAUSTED' if count else 'EMPTY_TRANSCRIPT',
+                 'scope':'Current solver limits; not a proof for every possible layout',
+                 'reachable_prefix_words':frontier,'total_words':count,
+                 'next_word_start_seconds':words[frontier]['start'] if frontier<count else None,
+                 'tick_seconds':.01,'attempts':attempts,'transcript_text_included':False}
     return {'schema':1,'status':'PLANNED' if cues else 'NO_READABLE_PLAN','cues':cues,'word_count':count,
+            'failure':failure,
             'speech_modified':False,'word_timestamps_modified':False,'editorial_approved':False,
             'display_tolerance_seconds':tolerance,
             'max_display_lead_seconds':round(max((words[c['word_range'][0]]['start']-c['start'] for c in cues),default=0),4),
