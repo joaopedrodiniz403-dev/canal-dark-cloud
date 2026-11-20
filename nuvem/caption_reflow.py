@@ -7,13 +7,21 @@ from .engine import ass_escape,ass_time,save
 
 
 def lines_for(words):
-    lines=['']
-    for word in words:
-        text=word['word'].strip()
-        if len(text)>32:return None
-        if len(lines[-1])+bool(lines[-1])+len(text)>32:lines.append(text)
-        else:lines[-1]+=(' ' if lines[-1] else '')+text
-    return lines if len(lines)<=2 else None
+    """Balance two lines without changing words or the 32-character limit."""
+    texts=[word['word'].strip() for word in words]
+    if not texts or any(len(text)>32 for text in texts):return None
+    joined=' '.join(texts)
+    if len(joined)<=32:return [joined]
+    choices=[]
+    for split in range(1,len(texts)):
+        lines=[' '.join(texts[:split]),' '.join(texts[split:])]
+        if max(map(len,lines))>32:continue
+        # Avoid a short orphan line. Sentence boundaries settle equal balances.
+        cost=(abs(len(lines[0])-len(lines[1])),
+              not texts[split-1].endswith(('.',',',';',':','!','?')),
+              split)
+        choices.append((cost,lines))
+    return min(choices,key=lambda item:item[0])[1] if choices else None
 
 
 def plan(words,duration):

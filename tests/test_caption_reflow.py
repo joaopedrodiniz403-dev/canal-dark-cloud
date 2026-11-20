@@ -1,7 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
-from nuvem.caption_reflow import plan,write
+from nuvem.caption_reflow import plan,write,lines_for
 from nuvem.caption_audit import parse_srt,tokens
 
 class ReflowTests(unittest.TestCase):
@@ -67,3 +67,26 @@ class ReflowTests(unittest.TestCase):
     def test_empty_and_success_have_distinct_failure_diagnostics(self):
         self.assertEqual(plan([],1)['failure']['code'],'EMPTY_TRANSCRIPT')
         self.assertIsNone(plan([{'word':'Olá','start':0,'end':1}],1)['failure'])
+
+    def test_two_line_layout_avoids_short_orphan_without_changing_words(self):
+        text='A entrevista apresenta uma história muito boa'
+        words=[{'word':word} for word in text.split()]
+        lines=lines_for(words)
+        self.assertEqual(len(lines),2)
+        self.assertEqual(' '.join(lines),text)
+        self.assertLessEqual(max(map(len,lines)),32)
+        self.assertLessEqual(abs(len(lines[0])-len(lines[1])),6)
+        self.assertIsNone(lines_for([{'word':'x'*33}]))
+        self.assertIsNone(lines_for([{'word':'x'*32}]*3))
+        self.assertEqual(lines_for([{'word':'Olá'},{'word':'mundo'}]),['Olá mundo'])
+
+    def test_balanced_ass_and_srt_preserve_portuguese_text(self):
+        text='A entrevista apresenta uma história muito boa'
+        words=[{'word':word,'start':i*.5,'end':(i+1)*.5} for i,word in enumerate(text.split())]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);checked=write(words,len(words)*.5,p/'a.ass',p/'a.srt')
+            self.assertTrue(checked['passed'])
+            cues=parse_srt((p/'a.srt').read_text())
+            self.assertEqual(tokens(' '.join(c['text'] for c in cues)),tokens(text))
+            for cue in cues:
+                self.assertIn(r'\N'.join(cue['text'].splitlines()),(p/'a.ass').read_text())
