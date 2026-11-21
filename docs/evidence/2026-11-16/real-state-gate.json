@@ -1,0 +1,10 @@
+{
+  "observed_on": "2026-11-16",
+  "state_branch": "nuvem-state",
+  "state_blob_sha": "2837bdc8a203ac20c83d2a264669eb6a24b38db5",
+  "reviews_count": 0,
+  "result": "HUMAN_EDITORIAL_APPROVAL_REQUIRED",
+  "upload_executed": false,
+  "credentials_accessed": false,
+  "state_written": false
+}

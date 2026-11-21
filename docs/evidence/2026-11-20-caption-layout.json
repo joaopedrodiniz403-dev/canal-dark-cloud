@@ -1,0 +1,86 @@
+{
+  "scope": "EXISTING_LOCAL_CANDIDATE_LAYOUT_DIAGNOSTIC_ONLY",
+  "source_attribution": "Entrevista com Murilo Sá Toledo — gravação/pós-produção: Rodrigo Tetsuo Argenton; reportagem: Érica Azzellini. Fonte: https://commons.wikimedia.org/w/index.php?title=File:Entrevista_com_Murilo_S%C3%A1_Toledo.webm&oldid=1121577018 . CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . Modificações: trecho, recorte vertical, normalização e legendas ASR não revisadas. Derivado distribuído em CC BY-SA 4.0; sem endosso.",
+  "source_interval": [
+    0.0,
+    18.68
+  ],
+  "candidate_score": 4.35,
+  "asr_reused": true,
+  "new_asr_executed": false,
+  "render_executed": true,
+  "cloud_transcript_fixed": false,
+  "editorial_approved": false,
+  "publication_approved": false,
+  "cues": 15,
+  "changed_layouts": [
+    {
+      "before": "tinha sítio aqui em Santana de\nParnaíba,",
+      "after": "tinha sítio aqui em\nSantana de Parnaíba,",
+      "start": 8.98
+    },
+    {
+      "before": "consegui fazer Santo Antônio.\nFeio",
+      "after": "consegui fazer\nSanto Antônio. Feio",
+      "start": 11.74
+    }
+  ],
+  "qa": {
+    "passed": true,
+    "scope": "technical_only",
+    "editorial_approved": false,
+    "publication_approved": false,
+    "checks": {
+      "vertical_1080x1920": true,
+      "duration": true,
+      "audio_present": true,
+      "audio_audible": true,
+      "audio_not_clipped": true,
+      "captions_in_bounds": true,
+      "no_long_freeze": true,
+      "no_black_interval": true
+    },
+    "duration": 16.682967,
+    "audio_rms_dbfs": -13.77,
+    "clipped_sample_fraction": 0.0008391827478945838,
+    "limitations": [
+      "ASR accuracy and meaning require listening",
+      "No semantic or legal approval",
+      "Freeze/black detection is a conservative technical gate"
+    ]
+  },
+  "caption_audit": {
+    "schema": 1,
+    "scope": "SUBTITLE_EXPORT_INTEGRITY_AND_READABILITY_ONLY",
+    "policy": {
+      "max_cps": 25,
+      "min_cue_seconds": 0.3,
+      "max_lines": 2,
+      "max_line_characters": 42,
+      "alignment_tolerance_seconds": 0.15
+    },
+    "passed": true,
+    "editorial_approved": false,
+    "speech_accuracy_verified": false,
+    "reference_match": "MATCH",
+    "issues": [],
+    "cue_count": 15,
+    "max_cps": 25.0,
+    "reference_token_count": 63,
+    "export_token_count": 63
+  },
+  "sha256": "368cf9d6d9c156f35f304e16a64a3ff29c30181034cf2a9e8be825a9708e013d",
+  "decoded_audio_matches_previous_render": true,
+  "decoded_audio_hashes": [
+    "SHA256=205c65d1b14ccfd0256d64fbdb791a910ef5d732ca38ad469a87b3b78f2f39ce",
+    "SHA256=205c65d1b14ccfd0256d64fbdb791a910ef5d732ca38ad469a87b3b78f2f39ce"
+  ],
+  "visual_inspection": {
+    "frame_seconds": 9.5,
+    "observed": "Both balanced lines fully visible below subject; face and attribution visible. Single-frame check only.",
+    "full_editorial_review": false
+  },
+  "ffmpeg_warnings_observed": [
+    "AAC queue input backward in time; non-monotonic DTS corrected by FFmpeg. No timestamp-continuity certification."
+  ]
+}

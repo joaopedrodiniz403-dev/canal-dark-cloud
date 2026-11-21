@@ -1,0 +1,14 @@
+test_429_long_retry_after_does_not_retry_early (tests.test_portuguese_validation.PortugueseSourceTests.test_429_long_retry_after_does_not_retry_early) ... ok
+test_429_short_retry_after_is_honored_once (tests.test_portuguese_validation.PortugueseSourceTests.test_429_short_retry_after_is_honored_once) ... ok
+test_429_without_retry_after_stops_without_loop (tests.test_portuguese_validation.PortugueseSourceTests.test_429_without_retry_after_stops_without_loop) ... ok
+test_cached_file_must_match_both_hashes (tests.test_portuguese_validation.PortugueseSourceTests.test_cached_file_must_match_both_hashes) ... ok
+test_cli_rate_limit_report_does_not_claim_asr_or_render (tests.test_portuguese_validation.PortugueseSourceTests.test_cli_rate_limit_report_does_not_claim_asr_or_render) ... ok
+test_download_wrong_hash_never_promoted_and_partial_removed (tests.test_portuguese_validation.PortugueseSourceTests.test_download_wrong_hash_never_promoted_and_partial_removed) ... ok
+test_invalid_cached_file_is_not_overwritten_or_downloaded (tests.test_portuguese_validation.PortugueseSourceTests.test_invalid_cached_file_is_not_overwritten_or_downloaded) ... ok
+test_oversized_download_is_bounded_and_removed (tests.test_portuguese_validation.PortugueseSourceTests.test_oversized_download_is_bounded_and_removed) ... ok
+test_wrong_file_blocked_before_upstream_or_render (tests.test_portuguese_validation.PortugueseSourceTests.test_wrong_file_blocked_before_upstream_or_render) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.205s
+
+OK

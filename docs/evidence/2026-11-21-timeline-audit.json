@@ -1,0 +1,95 @@
+{
+  "pt-layout-NOT-APPROVED.mp4": {
+    "schema": 1,
+    "scope": "EXPORTED_PACKET_TIMING_ONLY",
+    "passed": true,
+    "streams": {
+      "video": {
+        "packets": 498,
+        "start_seconds": 0.033,
+        "end_seconds": 16.682966999999998,
+        "max_gap_seconds": 0.033366,
+        "max_overlap_seconds": 1e-06
+      },
+      "audio": {
+        "packets": 1572,
+        "start_seconds": 0,
+        "end_seconds": 16.68,
+        "max_gap_seconds": 1e-06,
+        "max_overlap_seconds": 1e-06
+      }
+    },
+    "issues": [],
+    "perceptual_sync_verified": false,
+    "editorial_approved": false,
+    "policy": {
+      "max_gap_seconds": 0.1,
+      "max_overlap_seconds": 0.001,
+      "max_av_boundary_difference_seconds": 0.1
+    }
+  },
+  "integrated_qa": {
+    "passed": true,
+    "scope": "technical_only",
+    "editorial_approved": false,
+    "publication_approved": false,
+    "checks": {
+      "packet_timing": true,
+      "vertical_1080x1920": true,
+      "duration": true,
+      "audio_present": true,
+      "audio_audible": true,
+      "audio_not_clipped": true,
+      "captions_in_bounds": true,
+      "no_long_freeze": true,
+      "no_black_interval": true
+    },
+    "duration": 16.682967,
+    "timeline_audit": {
+      "schema": 1,
+      "scope": "EXPORTED_PACKET_TIMING_ONLY",
+      "passed": true,
+      "streams": {
+        "video": {
+          "packets": 498,
+          "start_seconds": 0.033,
+          "end_seconds": 16.682966999999998,
+          "max_gap_seconds": 0.033366,
+          "max_overlap_seconds": 1e-06
+        },
+        "audio": {
+          "packets": 1572,
+          "start_seconds": 0,
+          "end_seconds": 16.68,
+          "max_gap_seconds": 1e-06,
+          "max_overlap_seconds": 1e-06
+        }
+      },
+      "issues": [],
+      "perceptual_sync_verified": false,
+      "editorial_approved": false,
+      "policy": {
+        "max_gap_seconds": 0.1,
+        "max_overlap_seconds": 0.001,
+        "max_av_boundary_difference_seconds": 0.1
+      }
+    },
+    "audio_rms_dbfs": -13.77,
+    "clipped_sample_fraction": 0.0008391827478945838,
+    "limitations": [
+      "ASR accuracy and meaning require listening",
+      "No semantic or legal approval",
+      "Freeze/black detection is a conservative technical gate"
+    ]
+  },
+  "source_and_scope": {
+    "video_sha256": "368cf9d6d9c156f35f304e16a64a3ff29c30181034cf2a9e8be825a9708e013d",
+    "attribution": "Entrevista com Murilo Sá Toledo — gravação/pós-produção: Rodrigo Tetsuo Argenton; reportagem: Érica Azzellini. Fonte: https://commons.wikimedia.org/w/index.php?title=File:Entrevista_com_Murilo_S%C3%A1_Toledo.webm&oldid=1121577018 . CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . Modificações: trecho, recorte vertical, normalização e legendas ASR não revisadas. Derivado distribuído em CC BY-SA 4.0; sem endosso.",
+    "reused_existing_render": true,
+    "new_render_executed": false,
+    "new_asr_executed": false,
+    "upstream_warning_fixed": false,
+    "editorial_approved": false,
+    "note": "Temporary tighten intermediate had already been deleted by renderer; its timeline was not assessed."
+  }
+}

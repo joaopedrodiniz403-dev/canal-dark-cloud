@@ -1,0 +1,184 @@
+{
+  "generated_at": "2026-11-14T11:10:50.212927+00:00",
+  "scope": "FRAMING_DIAGNOSTIC_ONLY",
+  "production_eligible": false,
+  "editorial_approved": false,
+  "publication_enabled": false,
+  "attribution": "(CC) Blender Foundation | mango.blender.org \u2014 Tears of Steel \u2014 CC BY 3.0. Excerpt, crop, captions and audio normalization modified. No endorsement implied.",
+  "active_speaker_verified": false,
+  "production_default_changed": false,
+  "source_sha256": "5d5a925e2edf7a176d8cd9f602c58c2e1963d2c308e724d5feb2fd5d9f00a74e",
+  "duration": 20.88,
+  "detector": "yunet",
+  "detection_samples": 84,
+  "plan_status": "DUAL_FACE_DIAGNOSTIC",
+  "baseline_coverage": {
+    "detected_faces": 122,
+    "faces_95_percent_visible": 63,
+    "face_visibility_ratio": 0.5164,
+    "two_face_samples": 61,
+    "both_faces_visible_samples": 2,
+    "both_faces_visibility_ratio": 0.0328,
+    "scope": "Geometry of faces detected in source, not active speaker or ground truth",
+    "samples_without_detection": 23
+  },
+  "plan_summary": {
+    "ranges": [
+      [
+        2.0,
+        17.25
+      ]
+    ],
+    "panel_size": [
+      304,
+      270
+    ]
+  },
+  "dual_coverage": {
+    "detected_faces": 122,
+    "faces_95_percent_visible": 122,
+    "face_visibility_ratio": 1.0,
+    "two_face_samples": 61,
+    "both_faces_visible_samples": 61,
+    "both_faces_visibility_ratio": 1.0,
+    "scope": "Geometry of faces detected in source, not active speaker or ground truth",
+    "samples_without_detection": 23
+  },
+  "outputs": [
+    {
+      "layout": "baseline",
+      "video": "baseline/largest-face-NOT-APPROVED.mp4",
+      "sha256": "30135fbe78cb3c62f598998afc750c260148e290786018a972785e3750997432",
+      "technical_qa": {
+        "passed": true,
+        "scope": "technical_only",
+        "editorial_approved": false,
+        "publication_approved": false,
+        "checks": {
+          "vertical_1080x1920": true,
+          "duration": true,
+          "audio_present": true,
+          "audio_audible": true,
+          "audio_not_clipped": true,
+          "captions_in_bounds": true,
+          "no_long_freeze": true,
+          "no_black_interval": true
+        },
+        "duration": 20.916016,
+        "audio_rms_dbfs": -13.81,
+        "clipped_sample_fraction": 0.00049752138442818,
+        "limitations": [
+          "ASR accuracy and meaning require listening",
+          "No semantic or legal approval",
+          "Freeze/black detection is a conservative technical gate"
+        ]
+      },
+      "caption_audit": {
+        "schema": 1,
+        "scope": "SUBTITLE_EXPORT_INTEGRITY_AND_READABILITY_ONLY",
+        "policy": {
+          "max_cps": 25,
+          "min_cue_seconds": 0.3,
+          "max_lines": 2,
+          "max_line_characters": 42,
+          "alignment_tolerance_seconds": 0.15
+        },
+        "passed": false,
+        "editorial_approved": false,
+        "speech_accuracy_verified": false,
+        "reference_match": "MATCH",
+        "issues": [
+          {
+            "code": "READING_SPEED_EXCEEDED",
+            "cue": 5,
+            "characters_per_second": 36.111
+          },
+          {
+            "code": "READING_SPEED_EXCEEDED",
+            "cue": 7,
+            "characters_per_second": 31.579
+          },
+          {
+            "code": "READING_SPEED_EXCEEDED",
+            "cue": 14,
+            "characters_per_second": 30.769
+          },
+          {
+            "code": "READING_SPEED_EXCEEDED",
+            "cue": 18,
+            "characters_per_second": 30.556
+          },
+          {
+            "code": "READING_SPEED_EXCEEDED",
+            "cue": 19,
+            "characters_per_second": 29.63
+          }
+        ],
+        "cue_count": 23,
+        "max_cps": 36.111,
+        "reference_token_count": 77,
+        "export_token_count": 77
+      },
+      "observed_face_geometry_gate": false,
+      "editorial_approved": false
+    },
+    {
+      "layout": "dual",
+      "video": "dual/two-faces-NOT-APPROVED.mp4",
+      "sha256": "8b35c97f1255de9b8929874e7623ad5a37363d1aebf6af64152b90a1c1aa92b3",
+      "technical_qa": {
+        "passed": true,
+        "scope": "technical_only",
+        "editorial_approved": false,
+        "publication_approved": false,
+        "checks": {
+          "vertical_1080x1920": true,
+          "duration": true,
+          "audio_present": true,
+          "audio_audible": true,
+          "audio_not_clipped": true,
+          "captions_in_bounds": true,
+          "no_long_freeze": true,
+          "no_black_interval": true
+        },
+        "duration": 21.0,
+        "audio_rms_dbfs": -13.76,
+        "clipped_sample_fraction": 0.000500698892203701,
+        "limitations": [
+          "ASR accuracy and meaning require listening",
+          "No semantic or legal approval",
+          "Freeze/black detection is a conservative technical gate"
+        ]
+      },
+      "caption_audit": {
+        "schema": 1,
+        "scope": "SUBTITLE_EXPORT_INTEGRITY_AND_READABILITY_ONLY",
+        "policy": {
+          "max_cps": 25,
+          "min_cue_seconds": 0.3,
+          "max_lines": 2,
+          "max_line_characters": 42,
+          "alignment_tolerance_seconds": 0.15
+        },
+        "passed": true,
+        "editorial_approved": false,
+        "speech_accuracy_verified": false,
+        "reference_match": "MATCH",
+        "issues": [],
+        "cue_count": 21,
+        "max_cps": 24.194,
+        "reference_token_count": 77,
+        "export_token_count": 77
+      },
+      "observed_face_geometry_gate": true,
+      "editorial_approved": false
+    }
+  ],
+  "status": "COMPARED_NO_EDITORIAL_APPROVAL",
+  "limitations": [
+    "Detected face boxes are not ground truth or active-speaker identity",
+    "Left/right association is spatial and may swap people who cross",
+    "Only one English film scene; no Portuguese/GTA RP validation",
+    "Optional layout requires selected real content and human review; main default unchanged"
+  ]
+}

@@ -1,0 +1,27 @@
+test_confirmed_approval_is_editorial_only (tests.test_review_ledger.ReviewLedgerTests.test_confirmed_approval_is_editorial_only) ... ok
+test_corrupt_status_or_publication_flag_cannot_be_stored (tests.test_review_ledger.ReviewLedgerTests.test_corrupt_status_or_publication_flag_cannot_be_stored) ... ok
+test_existing_hash_binding_cannot_be_replaced (tests.test_review_ledger.ReviewLedgerTests.test_existing_hash_binding_cannot_be_replaced) ... ok
+test_github_storage_preserves_reviews_and_lease (tests.test_review_ledger.ReviewLedgerTests.test_github_storage_preserves_reviews_and_lease) ... ok
+test_legacy_state_preserves_history_without_inventing_reviews (tests.test_review_ledger.ReviewLedgerTests.test_legacy_state_preserves_history_without_inventing_reviews) ... ok
+test_missing_srt_cannot_leave_pending_item_or_consume_budget (tests.test_review_ledger.ReviewLedgerTests.test_missing_srt_cannot_leave_pending_item_or_consume_budget) ... ok
+test_modified_video_or_srt_invalidates_review (tests.test_review_ledger.ReviewLedgerTests.test_modified_video_or_srt_invalidates_review) ... ok
+test_no_implicit_approval (tests.test_review_ledger.ReviewLedgerTests.test_no_implicit_approval) ... ok
+test_rejection_keeps_previous_event (tests.test_review_ledger.ReviewLedgerTests.test_rejection_keeps_previous_event) ... ok
+test_roundtrip_preserves_pending_item (tests.test_review_ledger.ReviewLedgerTests.test_roundtrip_preserves_pending_item) ... ok
+test_stale_event_count_rejected (tests.test_review_ledger.ReviewLedgerTests.test_stale_event_count_rejected) ... ok
+test_unknown_hash_and_invalid_actor_do_not_mutate (tests.test_review_ledger.ReviewLedgerTests.test_unknown_hash_and_invalid_actor_do_not_mutate) ... ok
+test_unknown_review_fields_block_private_data (tests.test_review_ledger.ReviewLedgerTests.test_unknown_review_fields_block_private_data) ... ok
+test_corrupt_state_cannot_reset_history (tests.test_cloud.CloudCycleTests.test_corrupt_state_cannot_reset_history) ... ok
+test_framing_rejection_preserved_without_budget_consumption (tests.test_cloud.CloudCycleTests.test_framing_rejection_preserved_without_budget_consumption) ... ok
+test_no_media_does_not_call_backend (tests.test_cloud.CloudCycleTests.test_no_media_does_not_call_backend) ... ok
+test_persistent_budget_and_source_dedup (tests.test_cloud.CloudCycleTests.test_persistent_budget_and_source_dedup) ... ok
+test_srt_cue_parsing (tests.test_cloud.CloudCycleTests.test_srt_cue_parsing) ... ok
+test_synthetic_source_never_calls_backend (tests.test_cloud.CloudCycleTests.test_synthetic_source_never_calls_backend) ... ok
+test_invalid_lockfile_rejected (tests.test_cloud.DurableStateTests.test_invalid_lockfile_rejected) ... ok
+test_lockfile_eight_pinned_repositories (tests.test_cloud.DurableStateTests.test_lockfile_eight_pinned_repositories) ... ok
+test_write_preserves_optimistic_lease (tests.test_cloud.DurableStateTests.test_write_preserves_optimistic_lease) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.017s
+
+OK

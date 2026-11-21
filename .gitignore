@@ -7,3 +7,6 @@ work/
 *.sqlite*
 media/authorized/*
 !media/authorized/.gitkeep
+
+# Private upload plans, metadata and credentials must never enter Git/artifacts.
+private/

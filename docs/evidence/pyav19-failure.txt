@@ -1,0 +1,8 @@
+Observed 2026-11-09, pinned Chopify d576927, faster-whisper 1.2.1, av 19.0.2.
+Pipeline reached transcribe after PREFLIGHT OK. First real-media decode failed:
+  faster_whisper/audio.py, decode_audio:
+    av.open(input_file, mode="r", metadata_errors="ignore")
+TypeError: open() got an unexpected keyword argument 'metadata_errors'
+
+After av==16.0.1: same scene decoded and 68 word-level ASR tokens were written.
+The existing import-only smoke check could not detect this regression.
