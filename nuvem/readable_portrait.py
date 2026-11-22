@@ -42,9 +42,10 @@ def caption_hooks(renderer,captions,output):
 def render(segment,words,source,width,height,project,output,upstream):
     from .chopify_backend import verify_checkout
     verify_checkout(upstream);sys.path.insert(0,str(upstream))
-    import render_clips,captions
+    import render_clips,captions,tighten
+    from .continuous_tighten import hook
     output.mkdir(parents=True,exist_ok=True)
-    with caption_hooks(render_clips,captions,output):
+    with caption_hooks(render_clips,captions,output),hook(tighten):
         return render_clips.render(segment,words,source,width,height,project,'9:16',out_dir=output,
             style='bold',do_tighten=True,loudnorm=True,caption={'words_per_cue':3})
 

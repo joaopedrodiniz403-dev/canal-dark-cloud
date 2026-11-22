@@ -1,0 +1,232 @@
+{
+  "scope": "LICENSED_PORTUGUESE_SAME_CANDIDATE_TIGHTEN_COMPARISON",
+  "source_original_sha256": "96e790b029224ffafd2d4e7d740435104a04b580109d97ee9bcf3d5af1e88021",
+  "source_original_interval_seconds": [
+    30,
+    75
+  ],
+  "attribution": "Entrevista com Murilo Sá Toledo — gravação/pós-produção: Rodrigo Tetsuo Argenton; reportagem: Érica Azzellini. Fonte: https://commons.wikimedia.org/w/index.php?title=File:Entrevista_com_Murilo_S%C3%A1_Toledo.webm&oldid=1121577018 . CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . Modificações: trecho, recorte vertical, normalização e legendas ASR não revisadas. Derivado distribuído em CC BY-SA 4.0; sem endosso.",
+  "candidate_source_interval_seconds": [
+    0,
+    18.68
+  ],
+  "candidate_score": 4.35,
+  "keeps": [
+    [
+      0.0,
+      2.2
+    ],
+    [
+      2.32,
+      5.46
+    ],
+    [
+      5.54,
+      9.26
+    ],
+    [
+      9.36,
+      12.44
+    ],
+    [
+      12.6,
+      13.3
+    ],
+    [
+      14.84,
+      18.68
+    ]
+  ],
+  "expected_tightened_duration_seconds": 16.68,
+  "new_asr_executed": false,
+  "native_comparison_warnings": {
+    "non_monotonic": 0,
+    "backward_audio": 0
+  },
+  "old_warnings_reproduced_in_this_comparison": false,
+  "single_encode_report": {
+    "scope": "SINGLE_AAC_ENCODE_TECHNICAL_REPORT",
+    "keep_count": 6,
+    "duration_seconds": 16.68,
+    "video_fps": 30,
+    "non_monotonic_warning_count": 0,
+    "backward_audio_warning_count": 0,
+    "editorial_approved": false
+  },
+  "native_intermediate": {
+    "duration_seconds": 16.804067,
+    "timeline": {
+      "schema": 1,
+      "scope": "EXPORTED_PACKET_TIMING_ONLY",
+      "passed": true,
+      "streams": {
+        "video": {
+          "packets": 502,
+          "start_seconds": 0.021,
+          "end_seconds": 16.804067,
+          "max_gap_seconds": 0.032999,
+          "max_overlap_seconds": 1e-06
+        },
+        "audio": {
+          "packets": 791,
+          "start_seconds": 0,
+          "end_seconds": 16.773874999999997,
+          "max_gap_seconds": 1e-06,
+          "max_overlap_seconds": 1e-06
+        }
+      },
+      "issues": [],
+      "perceptual_sync_verified": false,
+      "editorial_approved": false,
+      "policy": {
+        "max_gap_seconds": 0.1,
+        "max_overlap_seconds": 0.001,
+        "max_av_boundary_difference_seconds": 0.1
+      }
+    }
+  },
+  "single_encode_intermediate": {
+    "duration_seconds": 16.683,
+    "timeline": {
+      "schema": 1,
+      "scope": "EXPORTED_PACKET_TIMING_ONLY",
+      "passed": true,
+      "streams": {
+        "video": {
+          "packets": 500,
+          "start_seconds": 0,
+          "end_seconds": 16.666666,
+          "max_gap_seconds": 1e-06,
+          "max_overlap_seconds": 0.0
+        },
+        "audio": {
+          "packets": 784,
+          "start_seconds": 0,
+          "end_seconds": 16.683,
+          "max_gap_seconds": 1e-06,
+          "max_overlap_seconds": 0.0
+        }
+      },
+      "issues": [],
+      "perceptual_sync_verified": false,
+      "editorial_approved": false,
+      "policy": {
+        "max_gap_seconds": 0.1,
+        "max_overlap_seconds": 0.001,
+        "max_av_boundary_difference_seconds": 0.1
+      }
+    }
+  },
+  "final_render": {
+    "scope": "EXISTING_LOCAL_CANDIDATE_LAYOUT_DIAGNOSTIC_ONLY",
+    "source_attribution": "Entrevista com Murilo Sá Toledo — gravação/pós-produção: Rodrigo Tetsuo Argenton; reportagem: Érica Azzellini. Fonte: https://commons.wikimedia.org/w/index.php?title=File:Entrevista_com_Murilo_S%C3%A1_Toledo.webm&oldid=1121577018 . CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . Modificações: trecho, recorte vertical, normalização e legendas ASR não revisadas. Derivado distribuído em CC BY-SA 4.0; sem endosso.",
+    "source_interval": [
+      0.0,
+      18.68
+    ],
+    "candidate_score": 4.35,
+    "asr_reused": true,
+    "new_asr_executed": false,
+    "render_executed": true,
+    "cloud_transcript_fixed": false,
+    "editorial_approved": false,
+    "publication_approved": false,
+    "cues": 15,
+    "changed_layouts": [
+      {
+        "before": "tinha sítio aqui em Santana de\nParnaíba,",
+        "after": "tinha sítio aqui em\nSantana de Parnaíba,",
+        "start": 8.98
+      },
+      {
+        "before": "consegui fazer Santo Antônio.\nFeio",
+        "after": "consegui fazer\nSanto Antônio. Feio",
+        "start": 11.74
+      }
+    ],
+    "qa": {
+      "passed": true,
+      "scope": "technical_only",
+      "editorial_approved": false,
+      "publication_approved": false,
+      "checks": {
+        "packet_timing": true,
+        "vertical_1080x1920": true,
+        "duration": true,
+        "audio_present": true,
+        "audio_audible": true,
+        "audio_not_clipped": true,
+        "captions_in_bounds": true,
+        "no_long_freeze": true,
+        "no_black_interval": true
+      },
+      "duration": 16.68,
+      "timeline_audit": {
+        "schema": 1,
+        "scope": "EXPORTED_PACKET_TIMING_ONLY",
+        "passed": true,
+        "streams": {
+          "video": {
+            "packets": 500,
+            "start_seconds": 0,
+            "end_seconds": 16.666666,
+            "max_gap_seconds": 1e-06,
+            "max_overlap_seconds": 0.0
+          },
+          "audio": {
+            "packets": 1556,
+            "start_seconds": 0,
+            "end_seconds": 16.68,
+            "max_gap_seconds": 0.0,
+            "max_overlap_seconds": 1e-06
+          }
+        },
+        "issues": [],
+        "perceptual_sync_verified": false,
+        "editorial_approved": false,
+        "policy": {
+          "max_gap_seconds": 0.1,
+          "max_overlap_seconds": 0.001,
+          "max_av_boundary_difference_seconds": 0.1
+        }
+      },
+      "audio_rms_dbfs": -13.73,
+      "clipped_sample_fraction": 0.0008478184688775261,
+      "limitations": [
+        "ASR accuracy and meaning require listening",
+        "No semantic or legal approval",
+        "Freeze/black detection is a conservative technical gate"
+      ]
+    },
+    "caption_audit": {
+      "schema": 1,
+      "scope": "SUBTITLE_EXPORT_INTEGRITY_AND_READABILITY_ONLY",
+      "policy": {
+        "max_cps": 25,
+        "min_cue_seconds": 0.3,
+        "max_lines": 2,
+        "max_line_characters": 42,
+        "alignment_tolerance_seconds": 0.15
+      },
+      "passed": true,
+      "editorial_approved": false,
+      "speech_accuracy_verified": false,
+      "reference_match": "MATCH",
+      "issues": [],
+      "cue_count": 15,
+      "max_cps": 25.0,
+      "reference_token_count": 63,
+      "export_token_count": 63
+    },
+    "sha256": "635b66bffdc24946ba7f2cdc821050c6cd3e451411199ec625a6699a18f194c9"
+  },
+  "editorial_approved": false,
+  "publication_approved": false,
+  "limitations": [
+    "No perceptual A/V sync or human listening review",
+    "No verified reference transcript/WER",
+    "Native comparison used an absolute output path after an initial relative-path concat failure",
+    "Does not resolve full cloud transcript NO_READABLE_PLAN",
+    "Only optional readable portrait uses new renderer; pinned upstream unchanged"
+  ]
+}
