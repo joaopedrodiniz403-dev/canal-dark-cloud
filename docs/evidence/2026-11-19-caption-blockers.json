@@ -1,0 +1,135 @@
+{
+  "artifact_zip_sha256": "a3a210d74b93c0d8e5f31ad0a6d4a18593ad32a925d57ad927a356d9e8dfb9f6",
+  "run_id": 44296841915,
+  "artifact_id": 14424995828,
+  "mapped_duration_seconds": 37.66,
+  "plan": {
+    "schema": 1,
+    "status": "NO_READABLE_PLAN",
+    "cues": [],
+    "word_count": 141,
+    "failure": {
+      "code": "BOUNDED_REFLOW_SEARCH_EXHAUSTED",
+      "scope": "Current solver limits; not a proof for every possible layout",
+      "reachable_prefix_words": 34,
+      "total_words": 141,
+      "next_word_start_seconds": 8.98,
+      "tick_seconds": 0.01,
+      "attempts": [
+        {
+          "word_range": [
+            34,
+            35
+          ],
+          "character_count": 5,
+          "required_display_ticks": 30,
+          "optimistic_available_ticks": 21,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            36
+          ],
+          "character_count": 11,
+          "required_display_ticks": 44,
+          "optimistic_available_ticks": 41,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            37
+          ],
+          "character_count": 16,
+          "required_display_ticks": 64,
+          "optimistic_available_ticks": 53,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            38
+          ],
+          "character_count": 19,
+          "required_display_ticks": 76,
+          "optimistic_available_ticks": 69,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            39
+          ],
+          "character_count": 27,
+          "required_display_ticks": 108,
+          "optimistic_available_ticks": 97,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            40
+          ],
+          "character_count": 30,
+          "required_display_ticks": 120,
+          "optimistic_available_ticks": 111,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            41
+          ],
+          "character_count": 38,
+          "required_display_ticks": 152,
+          "optimistic_available_ticks": 137,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION",
+            "INSUFFICIENT_DISPLAY_TIME"
+          ]
+        },
+        {
+          "word_range": [
+            34,
+            42
+          ],
+          "character_count": 40,
+          "required_display_ticks": 160,
+          "optimistic_available_ticks": 205,
+          "reasons": [
+            "PREVIOUS_CUE_COLLISION"
+          ]
+        }
+      ],
+      "transcript_text_included": false
+    },
+    "speech_modified": false,
+    "word_timestamps_modified": false,
+    "editorial_approved": false,
+    "display_tolerance_seconds": 0.15,
+    "max_display_lead_seconds": 0,
+    "max_display_lag_seconds": 0
+  },
+  "new_asr_executed": false,
+  "new_render_executed": false,
+  "editorial_approved": false
+}

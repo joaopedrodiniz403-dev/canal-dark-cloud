@@ -15,6 +15,17 @@ def source_file(root, filename):
 
 
 class CloudCycleTests(unittest.TestCase):
+    def test_framing_rejection_preserved_without_budget_consumption(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);source=source_file(p,'input.mp4');state=empty_state()
+            def backend(*args,**kwargs):
+                return {'outputs':[],'status':'FRAMING_REJECTED','framing':{'status':'FRAMING_REJECTED'}}
+            r=cycle(p,{'sources':[source]},p,p/'out',state,runner=backend)
+            self.assertEqual(r['sources'][0]['status'],'FRAMING_REJECTED')
+            self.assertEqual(r['sources'][0]['framing']['status'],'FRAMING_REJECTED')
+            self.assertEqual(r['remaining_daily_budget'],5);self.assertEqual(r['items'],[])
+            self.assertEqual(state['sources'],{});self.assertEqual(state['videos'],[])
+
     def test_no_media_does_not_call_backend(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)
@@ -41,8 +52,12 @@ class CloudCycleTests(unittest.TestCase):
                 inspector=lambda *args: {'passed': True, 'scope': 'technical_only'}
                 r=cycle(p, {'sources': [source]}, p, p/'first', state, backend, inspector)
                 self.assertEqual(r['ready_for_review'],5)
+                self.assertEqual(len(state['reviews']),5)
+                state=json.loads(json.dumps(state))  # new runner restores durable JSON
                 again=cycle(p, {'sources': [source]}, p, p/'again', state, backend, inspector)
                 self.assertEqual(again['ready_for_review'],0)
+                self.assertEqual(again['durable_pending_reviews'],5)
+                self.assertEqual(again['status'],'PENDING_DURABLE_REVIEWS')
                 self.assertEqual(calls,[5])
                 self.assertTrue(all(not x['publication_approved'] for x in r['items']))
                 # Another day resets budget but must still skip a processed source.

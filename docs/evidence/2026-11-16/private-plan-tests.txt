@@ -1,0 +1,19 @@
+test_audience_and_title_limits (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_audience_and_title_limits) ... ok
+test_cli_failure_does_not_print_private_paths_or_metadata (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_cli_failure_does_not_print_private_paths_or_metadata) ... ok
+test_media_contract_and_channel_required (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_media_contract_and_channel_required) ... ok
+test_metadata_review_confirmation_required (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_metadata_review_confirmation_required) ... ok
+test_mutated_media_or_subtitles_blocked (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_mutated_media_or_subtitles_blocked) ... ok
+test_new_decision_invalidates_plan_even_if_approved_again (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_new_decision_invalidates_plan_even_if_approved_again) ... ok
+test_official_private_only_request_and_no_execution (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_official_private_only_request_and_no_execution) ... ok
+test_pending_or_rejected_review_cannot_plan (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_pending_or_rejected_review_cannot_plan) ... ok
+test_private_output_permissions_and_no_overwrite (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_private_output_permissions_and_no_overwrite) ... ok
+test_private_parent_symlink_cannot_escape_repository (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_private_parent_symlink_cannot_escape_repository) ... ok
+test_public_unlisted_schedule_or_credentials_cannot_enter_metadata (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_public_unlisted_schedule_or_credentials_cannot_enter_metadata) ... ok
+test_rejected_revision_blocks_previously_valid_plan (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_rejected_revision_blocks_previously_valid_plan) ... ok
+test_tampered_plan_body_or_endpoint_is_invalid (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_tampered_plan_body_or_endpoint_is_invalid) ... ok
+test_unknown_or_missing_source_cannot_plan (tests.test_youtube_private_plan.PrivateUploadPlanTests.test_unknown_or_missing_source_cannot_plan) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.015s
+
+OK

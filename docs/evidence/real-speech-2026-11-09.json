@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "generated_at": "2026-11-09T11:53:40.043262+00:00",
+  "scope": "LICENSED_REAL_MEDIA_DIAGNOSTIC_ONLY",
+  "production_eligible": false,
+  "publication_enabled": false,
+  "editorial_approved": false,
+  "source": {
+    "title": "Tears of Steel",
+    "url": "https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov",
+    "sha256": "efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "rights_reference": "https://mango.blender.org/sharing/",
+    "attribution": "(CC) Blender Foundation | mango.blender.org — Tears of Steel — CC BY 3.0. Excerpt, crop, captions and audio normalization modified. No endorsement implied.",
+    "original_interval_seconds": [
+      22,
+      46
+    ]
+  },
+  "upstream_revision": "d576927bf3b764733c97ac1ad324aa9957b0885d",
+  "automatic_pipeline_status": "NO_CANDIDATES",
+  "automatic_output_count": 0,
+  "asr": {
+    "model": "small",
+    "language": "en",
+    "word_count": 68,
+    "word_errors": 12,
+    "reference_words": 75,
+    "hypothesis_words": 77,
+    "wer": 0.16,
+    "reference_scope": "official English subtitles; selected opening dialogue, not on-screen text",
+    "review_required": true
+  },
+  "selection": {
+    "mode": "heuristic",
+    "source_duration": 24.0094375,
+    "seeds": 8,
+    "windows_scanned": 32,
+    "candidates": 1,
+    "passing": 0,
+    "score_min": 5.03,
+    "score_max": 5.03,
+    "passing_score_min": null,
+    "passing_score_max": null,
+    "duration_min": 21.76,
+    "duration_max": 21.76,
+    "min_score": 8.0,
+    "preferred_len": null,
+    "analysis_floor": 8.0,
+    "content_profile": "talk",
+    "source_energy": 0.34677066412839036,
+    "evidence_available": {
+      "audio": true,
+      "visual": true
+    },
+    "visual_baseline": {
+      "value": 0.3053,
+      "motion_norm": 0.5562,
+      "cut_rate": 2.7273,
+      "facecam_norm": 0.0,
+      "samples": 4
+    },
+    "visual_ranges": 0,
+    "visual_sections": 0,
+    "warnings": []
+  },
+  "reference_render": {
+    "note": "Explicit renderer diagnostic of best candidate, even if editorial threshold rejects it; never enters production queue",
+    "start": 1.04,
+    "end": 22.8,
+    "score": 5.03,
+    "video": "reference/licensed-reference-NOT-APPROVED.mp4",
+    "sha256": "be98832396b846960900a4e70afa2adfeb03c20f1b362c5a6ac514280778bab4",
+    "qa": {
+      "passed": true,
+      "scope": "technical_only",
+      "editorial_approved": false,
+      "publication_approved": false,
+      "checks": {
+        "vertical_1080x1920": true,
+        "duration": true,
+        "audio_present": true,
+        "audio_audible": true,
+        "audio_not_clipped": true,
+        "captions_in_bounds": true,
+        "no_long_freeze": true,
+        "no_black_interval": true
+      },
+      "duration": 20.916016,
+      "audio_rms_dbfs": -13.81,
+      "clipped_sample_fraction": 0.00049752138442818,
+      "limitations": [
+        "ASR accuracy and meaning require listening",
+        "No semantic or legal approval",
+        "Freeze/black detection is a conservative technical gate"
+      ]
+    },
+    "keep_ranges": [
+      [
+        0.0,
+        20.32
+      ],
+      [
+        21.2,
+        21.76
+      ]
+    ]
+  },
+  "tracking": {
+    "samples": 104,
+    "face_detected_samples": 76,
+    "active_speaker_verified": false
+  },
+  "dependencies": {
+    "av": "16.0.1",
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.5",
+    "opencv-python": "5.0.0.93",
+    "numpy": "2.5.4"
+  },
+  "status": "DIAGNOSTIC_COMPLETED_NO_EDITORIAL_APPROVAL",
+  "limitations": [
+    "English film, not Portuguese GTA RP footage",
+    "Reference render bypasses selection solely for diagnostics, never approval",
+    "ASR transcript and speaker framing need human review"
+  ]
+}

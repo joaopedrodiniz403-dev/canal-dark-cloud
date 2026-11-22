@@ -1,0 +1,92 @@
+import tempfile
+import unittest
+from pathlib import Path
+from nuvem.caption_reflow import plan,write,lines_for
+from nuvem.caption_audit import parse_srt,tokens
+
+class ReflowTests(unittest.TestCase):
+    def test_regroups_rapid_three_word_caption_without_changing_words(self):
+        words=[{'word':t,'start':a,'end':b} for t,a,b in [('Olá',0,.4),('meu',.4,.5),('amigo',.5,.6),('vamos',.6,1.2),('conversar',1.2,2)]]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);r=write(words,2,p/'captions.ass',p/'captions.srt')
+            self.assertTrue(r['passed']);c=parse_srt((p/'captions.srt').read_text())
+            self.assertEqual(tokens(' '.join(x['text'] for x in c)),tokens(' '.join(x['word'] for x in words)))
+            ass=(p/'captions.ass').read_text();self.assertEqual(ass.count('Dialogue:'),len(c))
+            for cue in c:self.assertIn(r'\N'.join(cue['text'].splitlines()),ass)
+    def test_impossible_speech_is_rejected_without_extending_timestamps(self):
+        words=[{'word':'incompreensivelmente','start':0,'end':.1}]
+        self.assertEqual(plan(words,1)['status'],'NO_READABLE_PLAN')
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)
+            with self.assertRaisesRegex(ValueError,'NO_READABLE'):write(words,1,p/'a.ass',p/'a.srt')
+            self.assertFalse((p/'a.ass').exists());self.assertFalse((p/'a.srt').exists())
+    def test_long_silence_does_not_join_unrelated_speech(self):
+        words=[{'word':'Olá','start':0,'end':.4},{'word':'sim','start':3,'end':3.5}]
+        p=plan(words,4);self.assertEqual(len(p['cues']),2)
+    def test_invalid_overlap_and_hidden_words_not_silently_dropped(self):
+        with self.assertRaises(ValueError):plan([{'word':'a','start':1,'end':2},{'word':'b','start':1.5,'end':3}],4)
+        words=[{'word':'fala','start':0,'end':1,'hidden':True}]
+        self.assertEqual(plan(words,1)['cues'][0]['text'],'fala')
+    def test_ass_control_characters_are_escaped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);write([{'word':r'{\pos(0,0)}','start':0,'end':1}],1,p/'a.ass',p/'a.srt')
+            self.assertNotIn(r'{\pos(0,0)}',(p/'a.ass').read_text())
+    def test_bounded_display_padding_preserves_word_times(self):
+        import copy
+        words=[{'word':'fala','start':.2,'end':.3}];original=copy.deepcopy(words)
+        p=plan(words,1);self.assertEqual(p['status'],'PLANNED');self.assertEqual(words,original)
+        from decimal import Decimal
+        c=p['cues'][0];self.assertLessEqual(Decimal('.2')-Decimal(str(c['start'])),Decimal('.15'))
+        self.assertLessEqual(Decimal(str(c['end']))-Decimal('.3'),Decimal('.15'))
+        self.assertGreaterEqual(c['start'],0);self.assertLessEqual(c['end'],1)
+        self.assertFalse(p['word_timestamps_modified'])
+    def test_padding_cannot_overlap_adjacent_cues_or_escape_media(self):
+        words=[{'word':'Olá','start':.1,'end':.5},{'word':'sim','start':2,'end':2.4}]
+        p=plan(words,2.4);self.assertEqual(p['status'],'PLANNED')
+        self.assertEqual(len(p['cues']),2)
+        self.assertLessEqual(p['cues'][0]['end'],p['cues'][1]['start'])
+        self.assertGreaterEqual(p['cues'][0]['start'],0);self.assertLessEqual(p['cues'][-1]['end'],2.4)
+    def test_decimal_clip_end_is_not_lost_to_binary_tick_rounding(self):
+        p=plan([{'word':'fim','start':18.2,'end':18.58}],18.58)
+        self.assertEqual(p['status'],'PLANNED');self.assertEqual(p['cues'][-1]['end'],18.58)
+
+    def test_actual_actions_transcript_reports_bounded_failure_without_text(self):
+        import json
+        fixture=json.loads((Path(__file__).parent/'fixtures/pt-actions-reflow.json').read_text())
+        result=plan(fixture['words'],fixture['duration'])
+        self.assertEqual(result['status'],'NO_READABLE_PLAN')
+        failure=result['failure']
+        self.assertEqual(failure['reachable_prefix_words'],34)
+        self.assertEqual(failure['total_words'],141)
+        self.assertEqual(len(failure['attempts']),8)
+        self.assertTrue(all(a['reasons'] for a in failure['attempts']))
+        self.assertFalse(failure['transcript_text_included'])
+        self.assertNotIn('word',failure['attempts'][0])
+        self.assertFalse(result['editorial_approved'])
+
+    def test_empty_and_success_have_distinct_failure_diagnostics(self):
+        self.assertEqual(plan([],1)['failure']['code'],'EMPTY_TRANSCRIPT')
+        self.assertIsNone(plan([{'word':'Olá','start':0,'end':1}],1)['failure'])
+
+    def test_two_line_layout_avoids_short_orphan_without_changing_words(self):
+        text='A entrevista apresenta uma história muito boa'
+        words=[{'word':word} for word in text.split()]
+        lines=lines_for(words)
+        self.assertEqual(len(lines),2)
+        self.assertEqual(' '.join(lines),text)
+        self.assertLessEqual(max(map(len,lines)),32)
+        self.assertLessEqual(abs(len(lines[0])-len(lines[1])),6)
+        self.assertIsNone(lines_for([{'word':'x'*33}]))
+        self.assertIsNone(lines_for([{'word':'x'*32}]*3))
+        self.assertEqual(lines_for([{'word':'Olá'},{'word':'mundo'}]),['Olá mundo'])
+
+    def test_balanced_ass_and_srt_preserve_portuguese_text(self):
+        text='A entrevista apresenta uma história muito boa'
+        words=[{'word':word,'start':i*.5,'end':(i+1)*.5} for i,word in enumerate(text.split())]
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);checked=write(words,len(words)*.5,p/'a.ass',p/'a.srt')
+            self.assertTrue(checked['passed'])
+            cues=parse_srt((p/'a.srt').read_text())
+            self.assertEqual(tokens(' '.join(c['text'] for c in cues)),tokens(text))
+            for cue in cues:
+                self.assertIn(r'\N'.join(cue['text'].splitlines()),(p/'a.ass').read_text())

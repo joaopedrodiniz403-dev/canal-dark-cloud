@@ -1,0 +1,59 @@
+{
+  "backend": "https://github.com/mehbul/chopify",
+  "revision": "d576927bf3b764733c97ac1ad324aa9957b0885d",
+  "source": "Tears of Steel, verified CC BY film, original interval 22\u201346 seconds",
+  "status": "NO_CANDIDATES",
+  "editorial_approved": false,
+  "publication_approved": false,
+  "publication_enabled": false,
+  "rights": {
+    "verified": true,
+    "kind": "licensed",
+    "holder": "Blender Foundation",
+    "reference": "https://mango.blender.org/sharing/",
+    "verified_by": "Official film license checked; fixed original SHA verified in prior diagnostic",
+    "verified_at": "2026-11-09"
+  },
+  "outputs": [],
+  "asr_model": "small",
+  "framing_mode": "preserve_two_faces",
+  "reason": "EDITORIAL_THRESHOLD",
+  "selection": {
+    "mode": "heuristic",
+    "source_duration": 24.0094375,
+    "seeds": 8,
+    "windows_scanned": 32,
+    "candidates": 1,
+    "passing": 0,
+    "score_min": 5.03,
+    "score_max": 5.03,
+    "passing_score_min": null,
+    "passing_score_max": null,
+    "duration_min": 21.76,
+    "duration_max": 21.76,
+    "min_score": 8.0,
+    "preferred_len": null,
+    "analysis_floor": 8.0,
+    "content_profile": "talk",
+    "source_energy": 0.34677066412839036,
+    "evidence_available": {
+      "audio": true,
+      "visual": true
+    },
+    "visual_baseline": {
+      "value": 0.3053,
+      "motion_norm": 0.5562,
+      "cut_rate": 2.7273,
+      "facecam_norm": 0.0,
+      "samples": 4
+    },
+    "visual_ranges": 0,
+    "visual_sections": 0,
+    "warnings": []
+  },
+  "framing": {
+    "status": "NOT_RUN_NO_CANDIDATES"
+  },
+  "original_movie_sha256": "efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f",
+  "excerpt_sha256": "cd8b8c09b44f190481115b5750e37652df1e664d7859cb516b7fdbbf64312014"
+}

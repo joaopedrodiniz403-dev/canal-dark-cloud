@@ -255,7 +255,10 @@ def qa(path, words, expected):
     clipping = sum(abs(x) >= .999 for x in samples) / max(1, len(samples))
     visual = run(['ffmpeg', '-hide_banner', '-i', path, '-vf',
                   'freezedetect=n=-50dB:d=3,blackdetect=d=1:pix_th=0.05', '-an', '-f', 'null', '-']).stderr.decode(errors='replace')
+    from .timeline_audit import audit as audit_timeline
+    timeline=audit_timeline(path)
     checks = {
+        'packet_timing': timeline['passed'],
         'vertical_1080x1920': (v['width'], v['height']) == (1080, 1920),
         'duration': 12 <= duration <= 59.2 and abs(duration-expected) < .3,
         'audio_present': audio is not None and bool(samples),
@@ -266,7 +269,7 @@ def qa(path, words, expected):
         'no_black_interval': 'black_start:' not in visual,
     }
     return {'passed': all(checks.values()), 'scope': 'technical_only', 'editorial_approved': False, 'publication_approved': False, 'checks': checks, 'duration': duration,
-            'audio_rms_dbfs': round(rms_db, 2), 'clipped_sample_fraction': clipping,
+            'timeline_audit': timeline, 'audio_rms_dbfs': round(rms_db, 2), 'clipped_sample_fraction': clipping,
             'limitations': ['ASR accuracy and meaning require listening', 'No semantic or legal approval',
                             'Freeze/black detection is a conservative technical gate']}
 
